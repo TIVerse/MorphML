@@ -1,5 +1,5 @@
 # 🧬 MorphML Complete Algorithm Diagrams
-
+**Author:** Eshan Roy <eshanized@proton.me>
 **Version:** 1.0  
 **Last Updated:** October 31, 2025
 
@@ -1771,9 +1771,9 @@ All diagrams are in Mermaid.js format and can be rendered in:
 
 ---
 
-**Document Maintained By**: Architecture Team  
-**Last Updated**: October 31, 2025  
-**Next Review**: End of Month 3
+**Document Maintained By**: Eshan Roy <eshanized@proton.me>  
+**Last Updated**: October 31, 2025.
+**Next Review**: January 31, 2025.
 
 ---
 
