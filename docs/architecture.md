@@ -1,5 +1,9 @@
 # 🏗️ MorphML Architecture Documentation
 
+**Author:** Eshan Roy <eshanized@proton.me>  
+**Organization:** TONMOY INFRASTRUCTURE & VISION  
+**Organization Description:** TIVerse — The innovation universe by Tonmoy Infrastructure & Vision, building open-source tools in AI, Cloud, DevOps, and Infrastructure.  
+**Repository:** https://github.com/TIVerse/MorphML  
 **Version:** 1.0  
 **Last Updated:** October 31, 2025  
 **Status:** Design Phase

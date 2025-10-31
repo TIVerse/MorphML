@@ -1,3 +1,13 @@
+# MorphML System Architecture Diagram
+
+**Author:** Eshan Roy <eshanized@proton.me>  
+**Organization:** TONMOY INFRASTRUCTURE & VISION  
+**Organization Description:** TIVerse — The innovation universe by Tonmoy Infrastructure & Vision, building open-source tools in AI, Cloud, DevOps, and Infrastructure.  
+**Repository:** https://github.com/TIVerse/MorphML
+
+---
+
+```mermaid
 graph TB
     subgraph "User Interface Layer"
         CLI[CLI Interface]

@@ -1,6 +1,10 @@
 # 🧬 MorphML — Project Brief
 ## The Evolutionary AutoML Construction Kit
 
+**Author:** Eshan Roy <eshanized@proton.me>  
+**Organization:** TONMOY INFRASTRUCTURE & VISION  
+**Organization Description:** TIVerse — The innovation universe by Tonmoy Infrastructure & Vision, building open-source tools in AI, Cloud, DevOps, and Infrastructure.  
+**Repository:** https://github.com/TIVerse/MorphML  
 **Version:** 1.0  
 **Target Team Size:** 10 Members  
 **Estimated Timeline:** 18-24 months to v1.0  
