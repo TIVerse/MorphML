@@ -3,8 +3,6 @@
 import uuid
 from typing import Any, Dict, List, Optional
 
-from morphml.exceptions import GraphError
-
 
 class GraphNode:
     """

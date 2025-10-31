@@ -2,7 +2,7 @@
 
 import pytest
 
-from morphml.core.graph import GraphEdge, GraphMutator, ModelGraph, GraphNode
+from morphml.core.graph import GraphEdge, GraphMutator, GraphNode, ModelGraph
 from morphml.exceptions import GraphError
 
 
@@ -331,7 +331,7 @@ class TestGraphMutator:
         graph.add_node(node)
 
         mutator = GraphMutator()
-        original_filters = node.get_param("filters")
+        node.get_param("filters")
 
         mutator.modify_node_mutation(graph)
 

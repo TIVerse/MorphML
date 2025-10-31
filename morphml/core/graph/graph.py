@@ -204,7 +204,7 @@ class ModelGraph:
             sorted_ids = list(nx.topological_sort(nx_graph))
             return [self.nodes[node_id] for node_id in sorted_ids]
         except nx.NetworkXError as e:
-            raise GraphError(f"Graph is not a DAG: {e}")
+            raise GraphError(f"Graph is not a DAG: {e}") from e
 
     def is_valid(self) -> bool:
         """
@@ -387,7 +387,8 @@ class ModelGraph:
         """
         try:
             nx_graph = self.to_networkx()
-            return nx.dag_longest_path_length(nx_graph)
+            length: int = nx.dag_longest_path_length(nx_graph)
+            return length
         except nx.NetworkXError:
             return 0
 

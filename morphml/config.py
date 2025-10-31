@@ -104,7 +104,7 @@ class ConfigManager:
                 config_dict = yaml.safe_load(f)
             return cls(config_dict)
         except Exception as e:
-            raise ConfigurationError(f"Failed to load config from {config_path}: {e}")
+            raise ConfigurationError(f"Failed to load config from {config_path}: {e}") from e
 
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> "ConfigManager":
@@ -127,7 +127,7 @@ class ConfigManager:
             0.1
         """
         keys = key.split(".")
-        value = self._config
+        value: Any = self._config
 
         for k in keys:
             if isinstance(value, dict):
@@ -171,7 +171,7 @@ class ConfigManager:
             self._experiment_config = ExperimentConfig(**self._config)
             return self._experiment_config
         except Exception as e:
-            raise ConfigurationError(f"Configuration validation failed: {e}")
+            raise ConfigurationError(f"Configuration validation failed: {e}") from e
 
     def to_dict(self) -> Dict[str, Any]:
         """Export configuration as dictionary."""
