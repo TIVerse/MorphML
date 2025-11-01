@@ -1,3 +1,5 @@
 """Command-line interface for MorphML."""
 
-__all__ = []
+from morphml.cli.main import cli
+
+__all__ = ["cli"]

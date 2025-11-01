@@ -237,6 +237,17 @@ class ModelGraph:
 
         except (GraphError, nx.NetworkXError):
             return False
+    
+    def is_valid_dag(self) -> bool:
+        """
+        Check if graph is a valid DAG.
+        
+        Alias for is_valid() method.
+        
+        Returns:
+            True if valid DAG, False otherwise
+        """
+        return self.is_valid()
 
     def clone(self) -> "ModelGraph":
         """

@@ -266,3 +266,13 @@ DEFAULT_CONFIG = {
     },
     "logging": {"level": "INFO", "console": True, "file": None},
 }
+
+
+def get_config() -> ConfigManager:
+    """
+    Get default configuration manager.
+    
+    Returns:
+        ConfigManager instance with default configuration
+    """
+    return ConfigManager.from_dict(DEFAULT_CONFIG)
