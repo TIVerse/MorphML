@@ -88,18 +88,10 @@ class TestOptimizerBasics:
     def test_nsga2_basic(self) -> None:
         """Test NSGA2 multi-objective optimizer."""
         space = self.create_simple_space()
-        nsga = NSGA2(
-            space,
-            objectives=["fitness", "params"],
-            population_size=10,
-            num_generations=3
-        )
+        nsga = NSGA2(space, objectives=["fitness", "params"], population_size=10, num_generations=3)
 
         def multi_eval(graph: ModelGraph) -> dict:
-            return {
-                "fitness": 0.5 + 0.01 * len(graph.nodes),
-                "params": graph.estimate_parameters()
-            }
+            return {"fitness": 0.5 + 0.01 * len(graph.nodes), "params": graph.estimate_parameters()}
 
         pareto = nsga.optimize(multi_eval)
 
@@ -161,9 +153,7 @@ class TestOptimizerReset:
     def create_space(self) -> SearchSpace:
         """Create space."""
         return SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=64),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=64), Layer.output(units=10)
         )
 
     def evaluator(self, graph: ModelGraph) -> float:
@@ -224,9 +214,7 @@ class TestOptimizerHistory:
     def create_space(self) -> SearchSpace:
         """Create space."""
         return SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=64),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=64), Layer.output(units=10)
         )
 
     def evaluator(self, graph: ModelGraph) -> float:
@@ -273,9 +261,7 @@ class TestOptimizerCallbacks:
     def create_space(self) -> SearchSpace:
         """Create space."""
         return SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=64),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=64), Layer.output(units=10)
         )
 
     def evaluator(self, graph: ModelGraph) -> float:
@@ -316,9 +302,7 @@ class TestOptimizerStress:
     def test_large_population_ga(self) -> None:
         """Test GA with large population."""
         space = SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=32),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=32), Layer.output(units=10)
         )
 
         ga = GeneticAlgorithm(space, population_size=50, num_generations=2)
@@ -332,9 +316,7 @@ class TestOptimizerStress:
     def test_many_iterations_sa(self) -> None:
         """Test SA with many iterations."""
         space = SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=32),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=32), Layer.output(units=10)
         )
 
         sa = SimulatedAnnealing(space, max_iterations=100)
@@ -348,9 +330,7 @@ class TestOptimizerStress:
     def test_many_samples_random_search(self) -> None:
         """Test Random Search with many samples."""
         space = SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=32),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=32), Layer.output(units=10)
         )
 
         rs = RandomSearch(space, num_samples=100)
@@ -368,10 +348,7 @@ class TestOptimizerEdgeCases:
     def test_empty_search_space(self) -> None:
         """Test with minimal search space."""
         space = SearchSpace("minimal")
-        space.add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.output(units=10)
-        )
+        space.add_layers(Layer.input(shape=(3, 32, 32)), Layer.output(units=10))
 
         rs = RandomSearch(space, num_samples=5)
         evaluator = HeuristicEvaluator()
@@ -383,9 +360,7 @@ class TestOptimizerEdgeCases:
     def test_zero_fitness(self) -> None:
         """Test with zero fitness evaluator."""
         space = SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=32),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=32), Layer.output(units=10)
         )
 
         def zero_eval(graph):
@@ -399,9 +374,7 @@ class TestOptimizerEdgeCases:
     def test_constant_fitness(self) -> None:
         """Test with constant fitness."""
         space = SearchSpace("test").add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=32),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=32), Layer.output(units=10)
         )
 
         def constant_eval(graph):

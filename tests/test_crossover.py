@@ -189,7 +189,7 @@ class TestCrossoverWithSearchSpace:
             Layer.conv2d(filters=[64, 128], kernel_size=3),
             Layer.relu(),
             Layer.dense(units=[128, 256]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
         return space
 
@@ -355,7 +355,7 @@ def test_crossover_integration() -> None:
         Layer.relu(),
         Layer.dense(units=[128, 256, 512]),
         Layer.dropout(rate=[0.3, 0.5]),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     # Sample parents
@@ -400,15 +400,12 @@ def test_crossover_in_ga() -> None:
         Layer.relu(),
         Layer.maxpool(pool_size=2),
         Layer.dense(units=[128, 256]),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     # Run GA with custom crossover
     ga = GeneticAlgorithm(
-        search_space=space,
-        population_size=10,
-        num_generations=3,
-        crossover_rate=0.8
+        search_space=space, population_size=10, num_generations=3, crossover_rate=0.8
     )
 
     evaluator = HeuristicEvaluator()

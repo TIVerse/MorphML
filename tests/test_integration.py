@@ -38,16 +38,16 @@ class TestEndToEndWorkflow:
             Layer.maxpool(pool_size=2),
             Layer.dense(units=[128, 256]),
             Layer.dropout(rate=0.5),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # Configure optimizer
         config = {
-            'population_size': 10,
-            'num_generations': 5,
-            'elite_size': 2,
-            'mutation_rate': 0.15,
-            'crossover_rate': 0.7
+            "population_size": 10,
+            "num_generations": 5,
+            "elite_size": 2,
+            "mutation_rate": 0.15,
+            "crossover_rate": 0.7,
         }
 
         # Create evaluator
@@ -65,14 +65,14 @@ class TestEndToEndWorkflow:
         assert len(best.graph.nodes) > 0
 
         # Verify population evolved
-        assert optimizer.population.generation == config['num_generations']
-        assert optimizer.population.size() == config['population_size']
+        assert optimizer.population.generation == config["num_generations"]
+        assert optimizer.population.size() == config["population_size"]
 
         # Check statistics
         stats = optimizer.population.get_statistics()
-        assert 'best_fitness' in stats
-        assert 'mean_fitness' in stats
-        assert stats['best_fitness'] >= stats['mean_fitness']
+        assert "best_fitness" in stats
+        assert "mean_fitness" in stats
+        assert stats["best_fitness"] >= stats["mean_fitness"]
 
     def test_multiple_optimizers_same_problem(self) -> None:
         """Test multiple optimizers on the same search space."""
@@ -82,7 +82,7 @@ class TestEndToEndWorkflow:
             Layer.dense(units=[64, 128]),
             Layer.relu(),
             Layer.dropout(rate=[0.2, 0.5]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -91,17 +91,17 @@ class TestEndToEndWorkflow:
         # Test RandomSearch
         rs = RandomSearch(space, num_samples=20)
         rs_best = rs.optimize(evaluator)
-        results['RandomSearch'] = rs_best.fitness
+        results["RandomSearch"] = rs_best.fitness
 
         # Test HillClimbing
         hc = HillClimbing(space, max_iterations=20)
         hc_best = hc.optimize(evaluator)
-        results['HillClimbing'] = hc_best.fitness
+        results["HillClimbing"] = hc_best.fitness
 
         # Test GeneticAlgorithm
         ga = GeneticAlgorithm(space, population_size=10, num_generations=5)
         ga_best = ga.optimize(evaluator)
-        results['GeneticAlgorithm'] = ga_best.fitness
+        results["GeneticAlgorithm"] = ga_best.fitness
 
         # Verify all produced valid results
         for optimizer_name, fitness in results.items():
@@ -114,7 +114,7 @@ class TestEndToEndWorkflow:
             Layer.input(shape=(3, 32, 32)),
             Layer.conv2d(filters=64),
             Layer.relu(),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -136,7 +136,7 @@ class TestEndToEndWorkflow:
             assert ga2.population.generation == ga1.population.generation
 
             # Continue optimization
-            ga2.config['num_generations'] = 6
+            ga2.config["num_generations"] = 6
             final_best = ga2.optimize(evaluator)
 
             assert final_best is not None
@@ -157,7 +157,7 @@ class TestEndToEndWorkflow:
             Layer.flatten(),
             Layer.dense(units=256),
             Layer.dropout(rate=0.5),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # Sample architecture
@@ -170,7 +170,7 @@ class TestEndToEndWorkflow:
             # PyTorch export
             pytorch_code = exporter.to_pytorch(arch, "TestModel")
             pytorch_path = os.path.join(tmpdir, "model_pytorch.py")
-            with open(pytorch_path, 'w') as f:
+            with open(pytorch_path, "w") as f:
                 f.write(pytorch_code)
 
             assert os.path.exists(pytorch_path)
@@ -180,7 +180,7 @@ class TestEndToEndWorkflow:
             # Keras export
             keras_code = exporter.to_keras(arch, "test_model")
             keras_path = os.path.join(tmpdir, "model_keras.py")
-            with open(keras_path, 'w') as f:
+            with open(keras_path, "w") as f:
                 f.write(keras_code)
 
             assert os.path.exists(keras_path)
@@ -190,7 +190,7 @@ class TestEndToEndWorkflow:
             # JSON export
             json_str = exporter.to_json(arch)
             json_path = os.path.join(tmpdir, "model.json")
-            with open(json_path, 'w') as f:
+            with open(json_path, "w") as f:
                 f.write(json_str)
 
             assert os.path.exists(json_path)
@@ -209,7 +209,7 @@ class TestEndToEndWorkflow:
             Layer.relu(),
             Layer.maxpool(pool_size=2),
             Layer.dense(units=[128, 256, 512]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # Add constraints
@@ -234,7 +234,7 @@ class TestEndToEndWorkflow:
             Layer.relu(),
             Layer.dropout(rate=[0.1, 0.3, 0.5]),
             Layer.dense(units=[32, 64, 128]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -286,7 +286,7 @@ class TestEndToEndWorkflow:
             Layer.relu(),
             Layer.maxpool(pool_size=2),
             Layer.dense(units=128),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         mutator = GraphMutator(space)
@@ -307,22 +307,16 @@ class TestEndToEndWorkflow:
         """Test different selection strategies."""
         space = SearchSpace("selection_test")
         space.add_layers(
-            Layer.input(shape=(784,)),
-            Layer.dense(units=128),
-            Layer.relu(),
-            Layer.output(units=10)
+            Layer.input(shape=(784,)), Layer.dense(units=128), Layer.relu(), Layer.output(units=10)
         )
 
         evaluator = HeuristicEvaluator()
 
-        strategies = ['tournament', 'roulette', 'rank']
+        strategies = ["tournament", "roulette", "rank"]
 
         for strategy in strategies:
             ga = GeneticAlgorithm(
-                space,
-                population_size=15,
-                num_generations=5,
-                selection_strategy=strategy
+                space, population_size=15, num_generations=5, selection_strategy=strategy
             )
 
             best = ga.optimize(evaluator)
@@ -332,11 +326,7 @@ class TestEndToEndWorkflow:
     def test_early_stopping(self) -> None:
         """Test early stopping when no improvement."""
         space = SearchSpace("early_stop_test")
-        space.add_layers(
-            Layer.input(shape=(784,)),
-            Layer.dense(units=64),
-            Layer.output(units=10)
-        )
+        space.add_layers(Layer.input(shape=(784,)), Layer.dense(units=64), Layer.output(units=10))
 
         evaluator = HeuristicEvaluator()
 
@@ -360,7 +350,7 @@ class TestComplexScenarios:
             Layer.relu(),
             Layer.maxpool(pool_size=2),
             Layer.dense(units=[128, 256]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -395,7 +385,7 @@ class TestComplexScenarios:
             Layer.conv2d(filters=64, kernel_size=3),
             Layer.relu(),
             Layer.maxpool(pool_size=2),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # MLP space
@@ -405,21 +395,21 @@ class TestComplexScenarios:
             Layer.dense(units=[128, 256]),
             Layer.relu(),
             Layer.dense(units=[64, 128]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # Search both
         cnn_ga = GeneticAlgorithm(cnn_space, population_size=10, num_generations=5)
         cnn_best = cnn_ga.optimize(evaluator)
-        results['CNN'] = cnn_best
+        results["CNN"] = cnn_best
 
         mlp_ga = GeneticAlgorithm(mlp_space, population_size=10, num_generations=5)
         mlp_best = mlp_ga.optimize(evaluator)
-        results['MLP'] = mlp_best
+        results["MLP"] = mlp_best
 
         # Both should succeed
-        assert results['CNN'].fitness > 0
-        assert results['MLP'].fitness > 0
+        assert results["CNN"].fitness > 0
+        assert results["MLP"].fitness > 0
 
 
 def test_complete_production_workflow() -> None:
@@ -449,7 +439,7 @@ def test_complete_production_workflow() -> None:
         Layer.dense(units=[256, 512]),
         Layer.dropout(rate=[0.3, 0.5]),
         Layer.dense(units=[128, 256]),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     evaluator = HeuristicEvaluator()
@@ -462,7 +452,7 @@ def test_complete_production_workflow() -> None:
             num_generations=10,
             elite_size=2,
             mutation_rate=0.15,
-            crossover_rate=0.7
+            crossover_rate=0.7,
         )
 
         checkpoint_path = os.path.join(tmpdir, "checkpoint.json")
@@ -480,34 +470,34 @@ def test_complete_production_workflow() -> None:
         # PyTorch
         pytorch_code = exporter.to_pytorch(best.graph, "BestModel")
         pytorch_path = os.path.join(tmpdir, "best_model.py")
-        with open(pytorch_path, 'w') as f:
+        with open(pytorch_path, "w") as f:
             f.write(pytorch_code)
 
         # Keras
         keras_code = exporter.to_keras(best.graph, "best_model")
         keras_path = os.path.join(tmpdir, "best_model_keras.py")
-        with open(keras_path, 'w') as f:
+        with open(keras_path, "w") as f:
             f.write(keras_code)
 
         # JSON architecture
         json_str = exporter.to_json(best.graph)
         json_path = os.path.join(tmpdir, "best_architecture.json")
-        with open(json_path, 'w') as f:
+        with open(json_path, "w") as f:
             f.write(json_str)
 
         # Save results summary
         summary = {
-            'best_fitness': best.fitness,
-            'final_generation': ga.population.generation,
-            'population_size': ga.population.size(),
-            'best_model_nodes': len(best.graph.nodes),
-            'best_model_depth': best.graph.get_depth(),
-            'estimated_parameters': best.graph.estimate_parameters(),
-            'statistics': ga.population.get_statistics()
+            "best_fitness": best.fitness,
+            "final_generation": ga.population.generation,
+            "population_size": ga.population.size(),
+            "best_model_nodes": len(best.graph.nodes),
+            "best_model_depth": best.graph.get_depth(),
+            "estimated_parameters": best.graph.estimate_parameters(),
+            "statistics": ga.population.get_statistics(),
         }
 
         summary_path = os.path.join(tmpdir, "summary.json")
-        with open(summary_path, 'w') as f:
+        with open(summary_path, "w") as f:
             json.dump(summary, f, indent=2)
 
         # Verify all outputs

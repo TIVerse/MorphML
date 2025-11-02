@@ -112,8 +112,8 @@ class TestBenchmarkProblems:
         problems = get_all_problems()
 
         assert len(problems) > 0
-        assert all(hasattr(p, 'evaluate') for p in problems)
-        assert all(hasattr(p, 'search_space') for p in problems)
+        assert all(hasattr(p, "evaluate") for p in problems)
+        assert all(hasattr(p, "search_space") for p in problems)
 
 
 class TestBenchmarkSuite:
@@ -130,27 +130,18 @@ class TestBenchmarkSuite:
         """Test adding optimizers."""
         suite = BenchmarkSuite()
 
-        suite.add_optimizer(
-            "RS",
-            RandomSearch,
-            {'num_samples': 10}
-        )
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 10})
 
         assert "RS" in suite.optimizers
 
     def test_run_single_benchmark(self) -> None:
         """Test running single benchmark."""
         suite = BenchmarkSuite()
-        suite.add_optimizer("RS", RandomSearch, {'num_samples': 5})
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 5})
 
         problem = SimpleProblem()
 
-        result = suite.run_single(
-            problem,
-            "RS",
-            RandomSearch,
-            {'num_samples': 5}
-        )
+        result = suite.run_single(problem, "RS", RandomSearch, {"num_samples": 5})
 
         assert result is not None
         assert result.optimizer_name == "RS"
@@ -160,8 +151,8 @@ class TestBenchmarkSuite:
     def test_run_suite(self) -> None:
         """Test running full suite."""
         suite = BenchmarkSuite()
-        suite.add_optimizer("RS", RandomSearch, {'num_samples': 5})
-        suite.add_optimizer("HC", HillClimbing, {'max_iterations': 5})
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 5})
+        suite.add_optimizer("HC", HillClimbing, {"max_iterations": 5})
 
         problems = [SimpleProblem()]
 
@@ -173,7 +164,7 @@ class TestBenchmarkSuite:
     def test_get_summary(self) -> None:
         """Test getting summary."""
         suite = BenchmarkSuite()
-        suite.add_optimizer("RS", RandomSearch, {'num_samples': 5})
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 5})
 
         problems = [SimpleProblem()]
         results = suite.run(problems, num_runs=2)
@@ -181,13 +172,13 @@ class TestBenchmarkSuite:
         summary = suite.get_summary(results)
 
         assert len(summary) > 0
-        assert any('mean_best_fitness' in data for data in summary.values())
+        assert any("mean_best_fitness" in data for data in summary.values())
 
     def test_get_winner(self) -> None:
         """Test getting winner."""
         suite = BenchmarkSuite()
-        suite.add_optimizer("RS", RandomSearch, {'num_samples': 10})
-        suite.add_optimizer("HC", HillClimbing, {'max_iterations': 10})
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 10})
+        suite.add_optimizer("HC", HillClimbing, {"max_iterations": 10})
 
         problems = [SimpleProblem()]
         results = suite.run(problems, num_runs=2)
@@ -199,12 +190,12 @@ class TestBenchmarkSuite:
     def test_export_results(self) -> None:
         """Test exporting results."""
         suite = BenchmarkSuite()
-        suite.add_optimizer("RS", RandomSearch, {'num_samples': 5})
+        suite.add_optimizer("RS", RandomSearch, {"num_samples": 5})
 
         problems = [SimpleProblem()]
         suite.run(problems, num_runs=2)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             output_path = f.name
 
         try:
@@ -214,11 +205,12 @@ class TestBenchmarkSuite:
 
             # Verify valid JSON
             import json
-            with open(output_path, 'r') as f:
+
+            with open(output_path, "r") as f:
                 data = json.load(f)
 
-            assert 'results' in data
-            assert 'summary' in data
+            assert "results" in data
+            assert "summary" in data
 
         finally:
             if os.path.exists(output_path):
@@ -250,10 +242,10 @@ class TestOptimizerComparator:
 
         stats = comparator.get_statistics("GA", "Problem1")
 
-        assert 'mean' in stats
-        assert 'median' in stats
-        assert 'std' in stats
-        assert stats['count'] == 5
+        assert "mean" in stats
+        assert "median" in stats
+        assert "std" in stats
+        assert stats["count"] == 5
 
     def test_rank_optimizers(self) -> None:
         """Test ranking optimizers."""
@@ -277,8 +269,8 @@ class TestOptimizerComparator:
         comparison = comparator.compare_pair("GA", "RS", "Problem1")
 
         assert comparison is not None
-        assert 'winner' in comparison
-        assert comparison['winner'] == "GA"
+        assert "winner" in comparison
+        assert comparison["winner"] == "GA"
 
     def test_get_dominance_matrix(self) -> None:
         """Test dominance matrix."""
@@ -360,8 +352,8 @@ def test_benchmark_integration() -> None:
     suite = BenchmarkSuite()
 
     # Add optimizers
-    suite.add_optimizer("RS", RandomSearch, {'num_samples': 10})
-    suite.add_optimizer("HC", HillClimbing, {'max_iterations': 10})
+    suite.add_optimizer("RS", RandomSearch, {"num_samples": 10})
+    suite.add_optimizer("HC", HillClimbing, {"max_iterations": 10})
 
     # Run on multiple problems
     problems = [SimpleProblem(), MultiModalProblem()]
@@ -375,7 +367,7 @@ def test_benchmark_integration() -> None:
     assert len(summary) > 0
 
     # Export
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         output_path = f.name
 
     try:
@@ -420,9 +412,11 @@ def test_full_benchmark_pipeline() -> None:
     """Test complete benchmark pipeline."""
     # Setup
     suite = BenchmarkSuite()
-    suite.add_optimizer("RandomSearch", RandomSearch, {'num_samples': 15})
-    suite.add_optimizer("HillClimbing", HillClimbing, {'max_iterations': 15, 'patience': 5})
-    suite.add_optimizer("GeneticAlgorithm", GeneticAlgorithm, {'population_size': 10, 'num_generations': 3})
+    suite.add_optimizer("RandomSearch", RandomSearch, {"num_samples": 15})
+    suite.add_optimizer("HillClimbing", HillClimbing, {"max_iterations": 15, "patience": 5})
+    suite.add_optimizer(
+        "GeneticAlgorithm", GeneticAlgorithm, {"population_size": 10, "num_generations": 3}
+    )
 
     # Run benchmarks
     problems = [SimpleProblem(), MultiModalProblem()]

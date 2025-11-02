@@ -56,10 +56,7 @@ class TestHeuristicEvaluator:
     def test_evaluator_custom_weights(self) -> None:
         """Test custom weights."""
         evaluator = HeuristicEvaluator(
-            param_weight=0.5,
-            depth_weight=0.2,
-            width_weight=0.2,
-            connectivity_weight=0.1
+            param_weight=0.5, depth_weight=0.2, width_weight=0.2, connectivity_weight=0.1
         )
 
         assert evaluator.param_weight == 0.5
@@ -168,7 +165,7 @@ class TestHeuristicEvaluator:
             Layer.input(shape=(3, 32, 32)),
             Layer.conv2d(filters=[32, 64], kernel_size=3),
             Layer.relu(),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -191,18 +188,12 @@ class TestHeuristicEvaluator:
 
         # High parameter weight
         eval_high_param = HeuristicEvaluator(
-            param_weight=0.9,
-            depth_weight=0.05,
-            width_weight=0.025,
-            connectivity_weight=0.025
+            param_weight=0.9, depth_weight=0.05, width_weight=0.025, connectivity_weight=0.025
         )
 
         # Low parameter weight
         eval_low_param = HeuristicEvaluator(
-            param_weight=0.1,
-            depth_weight=0.3,
-            width_weight=0.3,
-            connectivity_weight=0.3
+            param_weight=0.1, depth_weight=0.3, width_weight=0.3, connectivity_weight=0.3
         )
 
         score_high = eval_high_param(graph)
@@ -257,7 +248,7 @@ class TestEvaluatorComparison:
             Layer.relu(),
             Layer.maxpool(pool_size=2),
             Layer.dense(units=[128, 256]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         for _ in range(20):
@@ -310,7 +301,7 @@ def test_evaluator_integration() -> None:
         Layer.maxpool(pool_size=2),
         Layer.dense(units=[128, 256]),
         Layer.dropout(rate=0.5),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     # Use heuristic evaluator

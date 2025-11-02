@@ -288,10 +288,7 @@ class TestCompositeConstraints:
 
     def test_composite_all_mode(self) -> None:
         """Test composite constraint with ALL mode."""
-        constraints = [
-            MaxParametersConstraint(1000000),
-            DepthConstraint(min_depth=1, max_depth=10)
-        ]
+        constraints = [MaxParametersConstraint(1000000), DepthConstraint(min_depth=1, max_depth=10)]
 
         composite = CompositeConstraint(constraints, mode="all")
         graph = self.create_graph()
@@ -303,7 +300,7 @@ class TestCompositeConstraints:
         """Test composite constraint with ANY mode."""
         constraints = [
             MaxParametersConstraint(100),  # Will fail
-            DepthConstraint(min_depth=1, max_depth=10)  # Will pass
+            DepthConstraint(min_depth=1, max_depth=10),  # Will pass
         ]
 
         composite = CompositeConstraint(constraints, mode="any")
@@ -323,7 +320,7 @@ class TestConstraintIntegration:
             Layer.input(shape=(3, 32, 32)),
             Layer.conv2d(filters=[32, 64, 128]),
             Layer.relu(),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         # Add constraint
@@ -344,9 +341,7 @@ class TestConstraintIntegration:
 
         space = SearchSpace("test")
         space.add_layers(
-            Layer.input(shape=(3, 32, 32)),
-            Layer.conv2d(filters=64),
-            Layer.output(units=10)
+            Layer.input(shape=(3, 32, 32)), Layer.conv2d(filters=64), Layer.output(units=10)
         )
 
         handler = ConstraintHandler()
@@ -374,7 +369,7 @@ def test_constraint_workflow() -> None:
         Layer.relu(),
         Layer.maxpool(),
         Layer.dense(units=[128, 256]),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     # Create constraint handler

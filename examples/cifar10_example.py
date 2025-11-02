@@ -25,10 +25,10 @@ search_space.add_layers(
 
 # First convolutional block
 search_space.add_layers(
-    Layer.conv2d(filters=[32, 64, 96], kernel_size=[3, 5], padding='same'),
+    Layer.conv2d(filters=[32, 64, 96], kernel_size=[3, 5], padding="same"),
     Layer.relu(),
     Layer.batchnorm(),
-    Layer.conv2d(filters=[32, 64, 96], kernel_size=3, padding='same'),
+    Layer.conv2d(filters=[32, 64, 96], kernel_size=3, padding="same"),
     Layer.relu(),
     Layer.batchnorm(),
     Layer.maxpool(pool_size=2, strides=2),
@@ -37,10 +37,10 @@ search_space.add_layers(
 
 # Second convolutional block
 search_space.add_layers(
-    Layer.conv2d(filters=[64, 128, 192], kernel_size=[3, 5], padding='same'),
+    Layer.conv2d(filters=[64, 128, 192], kernel_size=[3, 5], padding="same"),
     Layer.relu(),
     Layer.batchnorm(),
-    Layer.conv2d(filters=[64, 128, 192], kernel_size=3, padding='same'),
+    Layer.conv2d(filters=[64, 128, 192], kernel_size=3, padding="same"),
     Layer.relu(),
     Layer.batchnorm(),
     Layer.maxpool(pool_size=2, strides=2),
@@ -49,7 +49,7 @@ search_space.add_layers(
 
 # Optional third block
 search_space.add_layers(
-    Layer.conv2d(filters=[128, 256, 384], kernel_size=3, padding='same'),
+    Layer.conv2d(filters=[128, 256, 384], kernel_size=3, padding="same"),
     Layer.relu(),
     Layer.batchnorm(),
     Layer.avgpool(pool_size=2, strides=2),
@@ -64,22 +64,22 @@ search_space.add_layers(
     Layer.dense(units=[128, 256, 512]),
     Layer.relu(),
     Layer.dropout(rate=[0.3, 0.4, 0.5]),
-    Layer.output(units=10, activation='softmax')
+    Layer.output(units=10, activation="softmax"),
 )
 
 # Add constraints
 search_space.add_constraint(MaxParametersConstraint(max_params=5000000))  # Max 5M parameters
-search_space.add_constraint(DepthConstraint(min_depth=8, max_depth=20))   # 8-20 layers
+search_space.add_constraint(DepthConstraint(min_depth=8, max_depth=20))  # 8-20 layers
 
 # Optimizer configuration
 optimizer_config = {
-    'population_size': 30,
-    'num_generations': 100,
-    'elite_size': 3,
-    'mutation_rate': 0.2,
-    'crossover_rate': 0.8,
-    'selection_strategy': 'tournament',
-    'tournament_size': 5
+    "population_size": 30,
+    "num_generations": 100,
+    "elite_size": 3,
+    "mutation_rate": 0.2,
+    "crossover_rate": 0.8,
+    "selection_strategy": "tournament",
+    "tournament_size": 5,
 }
 
 # Evaluation budget

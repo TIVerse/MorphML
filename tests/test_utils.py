@@ -15,11 +15,7 @@ class TestCheckpoint:
 
     def create_test_optimizer(self, space: SearchSpace) -> GeneticAlgorithm:
         """Create test optimizer."""
-        return GeneticAlgorithm(
-            search_space=space,
-            population_size=10,
-            num_generations=5
-        )
+        return GeneticAlgorithm(search_space=space, population_size=10, num_generations=5)
 
     def create_space(self) -> SearchSpace:
         """Create test space."""
@@ -28,7 +24,7 @@ class TestCheckpoint:
             Layer.input(shape=(3, 32, 32)),
             Layer.conv2d(filters=64),
             Layer.relu(),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
         return space
 
@@ -46,7 +42,7 @@ class TestCheckpoint:
         ga.evaluate_population(self.simple_evaluator)
 
         # Save checkpoint
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             checkpoint_path = f.name
 
         try:
@@ -56,7 +52,7 @@ class TestCheckpoint:
             assert os.path.exists(checkpoint_path)
 
             # Check file is valid JSON
-            with open(checkpoint_path, 'r') as f:
+            with open(checkpoint_path, "r") as f:
                 data = json.load(f)
 
             assert "optimizer_type" in data
@@ -75,7 +71,7 @@ class TestCheckpoint:
         ga.initialize_population()
         ga.evaluate_population(self.simple_evaluator)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             checkpoint_path = f.name
 
         try:
@@ -106,7 +102,7 @@ class TestCheckpoint:
         original_gen = ga.population.generation
         original_size = ga.population.size()
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             checkpoint_path = f.name
 
         try:
@@ -137,11 +133,12 @@ class TestCheckpoint:
         for _ in range(5):
             graph = space.sample()
             from morphml.core.search import Individual
+
             ind = Individual(graph)
             ind.set_fitness(0.8)
             rs.evaluated.append(ind)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             checkpoint_path = f.name
 
         try:
@@ -289,7 +286,18 @@ class TestArchitectureExporter:
         sigmoid = GraphNode.create("sigmoid")
         output = GraphNode.create("dense", {"units": 10})
 
-        nodes = [input_node, conv, relu, maxpool, avgpool, dropout, batchnorm, dense, sigmoid, output]
+        nodes = [
+            input_node,
+            conv,
+            relu,
+            maxpool,
+            avgpool,
+            dropout,
+            batchnorm,
+            dense,
+            sigmoid,
+            output,
+        ]
 
         prev = None
         for node in nodes:
@@ -310,19 +318,19 @@ class TestArchitectureExporter:
         exporter = ArchitectureExporter()
         graph = self.create_sample_graph()
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
             pytorch_path = f.name
 
         try:
             # Generate and write PyTorch code
             code = exporter.to_pytorch(graph)
-            with open(pytorch_path, 'w') as f:
+            with open(pytorch_path, "w") as f:
                 f.write(code)
 
             # Verify file
             assert os.path.exists(pytorch_path)
 
-            with open(pytorch_path, 'r') as f:
+            with open(pytorch_path, "r") as f:
                 content = f.read()
 
             assert "import torch" in content
@@ -347,7 +355,7 @@ class TestUtilsIntegration:
             Layer.relu(),
             Layer.maxpool(pool_size=2),
             Layer.dense(units=[128, 256]),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         ga = GeneticAlgorithm(space, population_size=10, num_generations=3)
@@ -365,17 +373,17 @@ class TestUtilsIntegration:
 
             pytorch_path = os.path.join(tmpdir, "model.py")
             pytorch_code = exporter.to_pytorch(best.graph, "BestModel")
-            with open(pytorch_path, 'w') as f:
+            with open(pytorch_path, "w") as f:
                 f.write(pytorch_code)
 
             keras_path = os.path.join(tmpdir, "model_keras.py")
             keras_code = exporter.to_keras(best.graph, "best_model")
-            with open(keras_path, 'w') as f:
+            with open(keras_path, "w") as f:
                 f.write(keras_code)
 
             json_path = os.path.join(tmpdir, "architecture.json")
             json_str = exporter.to_json(best.graph)
-            with open(json_path, 'w') as f:
+            with open(json_path, "w") as f:
                 f.write(json_str)
 
             # Verify all files exist
@@ -385,10 +393,10 @@ class TestUtilsIntegration:
             assert os.path.exists(json_path)
 
             # Verify content
-            with open(pytorch_path, 'r') as f:
+            with open(pytorch_path, "r") as f:
                 assert "BestModel" in f.read()
 
-            with open(json_path, 'r') as f:
+            with open(json_path, "r") as f:
                 json.load(f)  # Should be valid JSON
 
     def test_resume_and_export(self) -> None:
@@ -400,7 +408,7 @@ class TestUtilsIntegration:
             Layer.input(shape=(3, 32, 32)),
             Layer.conv2d(filters=64),
             Layer.relu(),
-            Layer.output(units=10)
+            Layer.output(units=10),
         )
 
         evaluator = HeuristicEvaluator()
@@ -418,7 +426,7 @@ class TestUtilsIntegration:
             ga2 = Checkpoint.load(checkpoint_path, space, GeneticAlgorithm)
 
             # Continue for more generations
-            ga2.config['num_generations'] = 4
+            ga2.config["num_generations"] = 4
             best = ga2.optimize(evaluator)
 
             # Export final result
@@ -444,7 +452,7 @@ def test_utils_complete_workflow() -> None:
         Layer.maxpool(pool_size=2),
         Layer.dense(units=[256, 512]),
         Layer.dropout(rate=[0.3, 0.5]),
-        Layer.output(units=10)
+        Layer.output(units=10),
     )
 
     evaluator = HeuristicEvaluator()
@@ -473,16 +481,16 @@ def test_utils_complete_workflow() -> None:
 
         # Export random search best
         rs_pytorch = exporter.to_pytorch(rs_best.graph, "RandomSearchBest")
-        with open(os.path.join(tmpdir, "rs_model.py"), 'w') as f:
+        with open(os.path.join(tmpdir, "rs_model.py"), "w") as f:
             f.write(rs_pytorch)
 
         # Export GA best
         ga_pytorch = exporter.to_pytorch(ga_best.graph, "GABest")
-        with open(os.path.join(tmpdir, "ga_model.py"), 'w') as f:
+        with open(os.path.join(tmpdir, "ga_model.py"), "w") as f:
             f.write(ga_pytorch)
 
         ga_keras = exporter.to_keras(ga_best.graph, "ga_best_model")
-        with open(os.path.join(tmpdir, "ga_model_keras.py"), 'w') as f:
+        with open(os.path.join(tmpdir, "ga_model_keras.py"), "w") as f:
             f.write(ga_keras)
 
         # Verify all outputs

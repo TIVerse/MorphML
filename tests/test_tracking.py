@@ -62,6 +62,7 @@ class TestExperiment:
         exp = Experiment("test", {})
 
         import time
+
         time.sleep(0.1)
 
         duration = exp.get_duration()
@@ -213,7 +214,7 @@ class TestExperimentTracker:
 
             assert os.path.exists(summary_path)
 
-            with open(summary_path, 'r') as f:
+            with open(summary_path, "r") as f:
                 data = json.load(f)
 
             assert "total_experiments" in data
@@ -306,7 +307,7 @@ class TestMetricLogger:
         logger.log("fitness", 0.85)
         logger.log("accuracy", 0.92)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             filepath = f.name
 
         try:
@@ -353,7 +354,7 @@ class TestCSVLogger:
 
     def test_csv_logger(self) -> None:
         """Test CSV logging."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
             filepath = f.name
 
         try:
@@ -364,7 +365,7 @@ class TestCSVLogger:
             # Check file exists and has content
             assert os.path.exists(filepath)
 
-            with open(filepath, 'r') as f:
+            with open(filepath, "r") as f:
                 lines = f.readlines()
 
             # Should have header + 2 data rows
@@ -436,7 +437,7 @@ class TestReporter:
         reporter = Reporter()
         report = reporter.generate_markdown_report(exp)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
             filepath = f.name
 
         try:
@@ -444,7 +445,7 @@ class TestReporter:
 
             assert os.path.exists(filepath)
 
-            with open(filepath, 'r') as f:
+            with open(filepath, "r") as f:
                 content = f.read()
 
             assert "# Experiment Report" in content
@@ -517,12 +518,15 @@ def test_metric_logger_workflow() -> None:
         worst = best - 0.2
         diversity = 0.8 - gen * 0.01
 
-        logger.log_dict({
-            "best_fitness": best,
-            "mean_fitness": mean,
-            "worst_fitness": worst,
-            "diversity": diversity
-        }, step=gen)
+        logger.log_dict(
+            {
+                "best_fitness": best,
+                "mean_fitness": mean,
+                "worst_fitness": worst,
+                "diversity": diversity,
+            },
+            step=gen,
+        )
 
     # Get summary
     summary = logger.get_summary()
@@ -532,7 +536,7 @@ def test_metric_logger_workflow() -> None:
     assert summary["best_fitness"]["count"] == 20
 
     # Save
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         filepath = f.name
 
     try:

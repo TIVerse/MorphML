@@ -33,18 +33,18 @@ search_space.add_layers(
     Layer.dense(units=[128, 256, 512]),
     Layer.dropout(rate=[0.1, 0.3, 0.5]),
     Layer.dense(units=[64, 128, 256]),
-    Layer.output(units=10)
+    Layer.output(units=10),
 )
 
 # Configure genetic algorithm
 optimizer_config = {
-    'population_size': 20,
-    'num_generations': 50,
-    'elite_size': 2,
-    'mutation_rate': 0.15,
-    'crossover_rate': 0.7,
-    'selection_strategy': 'tournament',
-    'tournament_size': 3
+    "population_size": 20,
+    "num_generations": 50,
+    "elite_size": 2,
+    "mutation_rate": 0.15,
+    "crossover_rate": 0.7,
+    "selection_strategy": "tournament",
+    "tournament_size": 3,
 }
 
 # Budget (optional - limits total evaluations)
