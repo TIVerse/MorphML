@@ -4,7 +4,7 @@ Multi-objective optimization using Pareto dominance and crowding distance.
 """
 
 import random
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional
 
 from morphml.core.dsl.search_space import SearchSpace
 from morphml.core.graph import GraphMutator, ModelGraph

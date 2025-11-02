@@ -1,8 +1,8 @@
 """Population visualization tools."""
 
-from typing import List, Optional
+from typing import Optional
 
-from morphml.core.search import Individual, Population
+from morphml.core.search import Population
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)

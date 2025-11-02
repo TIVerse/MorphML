@@ -112,7 +112,7 @@ class DifferentialEvolution:
 
         logger.info(f"Evaluating {len(unevaluated)} individuals")
 
-        for i, individual in enumerate(unevaluated):
+        for _i, individual in enumerate(unevaluated):
             try:
                 fitness = evaluator(individual.graph)
                 individual.set_fitness(fitness)

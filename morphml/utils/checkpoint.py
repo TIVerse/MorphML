@@ -2,17 +2,17 @@
 
 Example:
     >>> from morphml.utils import Checkpoint
-    >>> 
+    >>>
     >>> # Save
     >>> Checkpoint.save(optimizer, 'checkpoint.json')
-    >>> 
+    >>>
     >>> # Load
     >>> optimizer = Checkpoint.load('checkpoint.json', space)
 """
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from morphml.core.dsl.search_space import SearchSpace
 from morphml.core.search import Individual, Population

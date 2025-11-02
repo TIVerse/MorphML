@@ -3,7 +3,6 @@
 import statistics
 from typing import Any, Dict, List, Optional
 
-from morphml.benchmarks.problems import BenchmarkProblem
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -151,8 +150,8 @@ class OptimizerComparator:
         Returns:
             Dictionary mapping (opt1, opt2) to number of problems opt1 beats opt2
         """
-        optimizers = set(opt for opt, _ in self.results.keys())
-        problems = set(prob for _, prob in self.results.keys())
+        optimizers = {opt for opt, _ in self.results.keys()}
+        problems = {prob for _, prob in self.results.keys()}
 
         dominance = {}
 
@@ -176,8 +175,8 @@ class OptimizerComparator:
 
     def print_comparison(self) -> None:
         """Print detailed comparison of all optimizers."""
-        problems = set(prob for _, prob in self.results.keys())
-        optimizers = set(opt for opt, _ in self.results.keys())
+        problems = {prob for _, prob in self.results.keys()}
+        optimizers = {opt for opt, _ in self.results.keys()}
 
         print("\n" + "=" * 100)
         print("OPTIMIZER COMPARISON")
@@ -193,7 +192,7 @@ class OptimizerComparator:
 
             rankings = self.rank_optimizers(problem)
 
-            for opt_name, mean_fitness in rankings:
+            for opt_name, _mean_fitness in rankings:
                 stats = self.get_statistics(opt_name, problem)
 
                 print(
@@ -230,8 +229,8 @@ class OptimizerComparator:
 
     def get_best_optimizer(self) -> Optional[str]:
         """Get overall best optimizer."""
-        problems = set(prob for _, prob in self.results.keys())
-        optimizers = set(opt for opt, _ in self.results.keys())
+        problems = {prob for _, prob in self.results.keys()}
+        optimizers = {opt for opt, _ in self.results.keys()}
 
         overall_scores = {}
         for opt in optimizers:
@@ -251,8 +250,8 @@ class OptimizerComparator:
 
     def export_latex_table(self, filename: str) -> None:
         """Export comparison as LaTeX table."""
-        problems = sorted(set(prob for _, prob in self.results.keys()))
-        optimizers = sorted(set(opt for opt, _ in self.results.keys()))
+        problems = sorted({prob for _, prob in self.results.keys()})
+        optimizers = sorted({opt for opt, _ in self.results.keys()})
 
         with open(filename, "w") as f:
             # Header
@@ -299,8 +298,8 @@ class OptimizerComparator:
             logger.warning("matplotlib not available for plotting")
             return
 
-        problems = sorted(set(prob for _, prob in self.results.keys()))
-        optimizers = sorted(set(opt for opt, _ in self.results.keys()))
+        problems = sorted({prob for _, prob in self.results.keys()})
+        optimizers = sorted({opt for opt, _ in self.results.keys()})
 
         fig, axes = plt.subplots(1, len(problems), figsize=(5 * len(problems), 5))
 

@@ -6,7 +6,7 @@ and return the best one. Serves as a baseline for comparison.
 Example:
     >>> from morphml.optimizers import RandomSearch
     >>> from morphml.core.dsl import create_cnn_space
-    >>> 
+    >>>
     >>> space = create_cnn_space(num_classes=10)
     >>> rs = RandomSearch(search_space=space, num_samples=100)
     >>> best = rs.optimize(evaluator=my_evaluator)
@@ -104,7 +104,7 @@ class RandomSearch:
                     if not self.allow_duplicates:
                         graph_hash = graph.hash()
                         if graph_hash in seen_hashes:
-                            logger.debug(f"Skipping duplicate architecture")
+                            logger.debug("Skipping duplicate architecture")
                             continue
                         seen_hashes.add(graph_hash)
 

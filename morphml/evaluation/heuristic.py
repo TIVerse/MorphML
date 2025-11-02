@@ -5,7 +5,7 @@ enabling rapid architecture search and development.
 
 Example:
     >>> from morphml.evaluation import HeuristicEvaluator
-    >>> 
+    >>>
     >>> evaluator = HeuristicEvaluator()
     >>> score = evaluator.combined_score(graph)
 """

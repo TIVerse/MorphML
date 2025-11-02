@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from morphml.logging_config import get_logger
 
@@ -131,7 +131,7 @@ class Reporter:
         if experiment.metrics:
             html.append("<h2>Metrics</h2>")
             for metric_name, entries in experiment.metrics.items():
-                html.append(f"<div class='metric-card'>")
+                html.append("<div class='metric-card'>")
                 html.append(f"<h3>{metric_name}</h3>")
                 html.append(f"<p>Total entries: {len(entries)}</p>")
                 if entries:

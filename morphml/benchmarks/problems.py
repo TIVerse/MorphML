@@ -1,7 +1,6 @@
 """Benchmark problems for optimizer evaluation."""
 
 import math
-from typing import Callable
 
 from morphml.core.dsl import Layer, SearchSpace
 from morphml.core.graph import ModelGraph

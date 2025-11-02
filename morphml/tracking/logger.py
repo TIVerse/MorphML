@@ -1,7 +1,6 @@
 """Metric logging utilities."""
 
 import json
-import os
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
 

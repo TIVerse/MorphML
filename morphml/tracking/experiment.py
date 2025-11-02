@@ -6,8 +6,6 @@ import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from morphml.core.graph import ModelGraph
-from morphml.core.search import Individual
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)

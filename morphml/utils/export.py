@@ -2,7 +2,7 @@
 
 Example:
     >>> from morphml.utils import ArchitectureExporter
-    >>> 
+    >>>
     >>> exporter = ArchitectureExporter()
     >>> pytorch_code = exporter.to_pytorch(graph)
     >>> print(pytorch_code)
@@ -127,15 +127,15 @@ class ArchitectureExporter:
             op = node.operation
 
             if op == "input":
-                code.append(f"        # x = input")
+                code.append("        # x = input")
             elif op == "relu":
-                code.append(f"        x = F.relu(x)")
+                code.append("        x = F.relu(x)")
             elif op == "sigmoid":
-                code.append(f"        x = torch.sigmoid(x)")
+                code.append("        x = torch.sigmoid(x)")
             elif op == "tanh":
-                code.append(f"        x = torch.tanh(x)")
+                code.append("        x = torch.tanh(x)")
             elif op == "softmax":
-                code.append(f"        x = F.softmax(x, dim=1)")
+                code.append("        x = F.softmax(x, dim=1)")
             else:
                 code.append(f"        x = self.{layer_name}(x)")
 
@@ -215,15 +215,15 @@ class ArchitectureExporter:
                 rate = params.get("rate", 0.5)
                 code.append(f"    x = layers.Dropout({rate})(x)")
             elif op == "batchnorm":
-                code.append(f"    x = layers.BatchNormalization()(x)")
+                code.append("    x = layers.BatchNormalization()(x)")
             elif op == "relu":
-                code.append(f"    x = layers.Activation('relu')(x)")
+                code.append("    x = layers.Activation('relu')(x)")
             elif op == "sigmoid":
-                code.append(f"    x = layers.Activation('sigmoid')(x)")
+                code.append("    x = layers.Activation('sigmoid')(x)")
             elif op == "tanh":
-                code.append(f"    x = layers.Activation('tanh')(x)")
+                code.append("    x = layers.Activation('tanh')(x)")
             elif op == "softmax":
-                code.append(f"    x = layers.Activation('softmax')(x)")
+                code.append("    x = layers.Activation('softmax')(x)")
 
         code.append("")
         code.append("    model = keras.Model(inputs=inputs, outputs=x)")

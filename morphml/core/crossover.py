@@ -1,9 +1,9 @@
 """Advanced crossover operators for genetic algorithms."""
 
 import random
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
-from morphml.core.graph import GraphEdge, GraphNode, ModelGraph
+from morphml.core.graph import GraphEdge, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -348,8 +348,8 @@ class AdaptiveCrossover(CrossoverOperator):
         size_sim = 1.0 - abs(len(nodes1) - len(nodes2)) / max(len(nodes1), len(nodes2))
 
         # Operation type similarity
-        ops1 = set(n.operation for n in nodes1)
-        ops2 = set(n.operation for n in nodes2)
+        ops1 = {n.operation for n in nodes1}
+        ops2 = {n.operation for n in nodes2}
 
         if not ops1 or not ops2:
             return size_sim

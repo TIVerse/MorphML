@@ -4,7 +4,6 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict
 
 import click
 from rich.console import Console
@@ -19,7 +18,6 @@ from rich.progress import (
 from rich.table import Table
 
 from morphml import __version__
-from morphml.core.dsl import Layer, SearchSpace
 from morphml.evaluation import HeuristicEvaluator
 from morphml.logging_config import get_logger, setup_logging
 from morphml.optimizers import GeneticAlgorithm
@@ -71,8 +69,8 @@ def run(
     setup_logging(level="DEBUG" if verbose else "INFO")
 
     console.print(f"[bold cyan]MorphML v{__version__}[/bold cyan]")
-    console.print(f"[cyan]Author:[/cyan] Eshan Roy <eshanized@proton.me>")
-    console.print(f"[cyan]Organization:[/cyan] TONMOY INFRASTRUCTURE & VISION\n")
+    console.print("[cyan]Author:[/cyan] Eshan Roy <eshanized@proton.me>")
+    console.print("[cyan]Organization:[/cyan] TONMOY INFRASTRUCTURE & VISION\n")
     console.print(f"Running experiment: [yellow]{experiment_file}[/yellow]\n")
 
     # Load experiment definition
@@ -101,7 +99,7 @@ def run(
             "crossover_rate": 0.7,
         },
     )
-    max_evaluations = getattr(module, "max_evaluations", None)
+    getattr(module, "max_evaluations", None)
 
     # Create output directory
     output_path = Path(output_dir)

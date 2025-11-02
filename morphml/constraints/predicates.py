@@ -1,6 +1,6 @@
 """Constraint predicates for architecture validation."""
 
-from typing import Any, List, Optional, Set
+from typing import List, Optional, Set
 
 from morphml.core.graph import ModelGraph
 

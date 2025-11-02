@@ -1,13 +1,13 @@
 """Benchmark suite for NAS optimizers."""
 
-from morphml.benchmarks.suite import BenchmarkSuite
 from morphml.benchmarks.comparator import OptimizerComparator
 from morphml.benchmarks.problems import (
-    SimpleProblem,
     ComplexProblem,
-    MultiModalProblem,
     ConstrainedProblem,
+    MultiModalProblem,
+    SimpleProblem,
 )
+from morphml.benchmarks.suite import BenchmarkSuite
 
 __all__ = [
     "BenchmarkSuite",

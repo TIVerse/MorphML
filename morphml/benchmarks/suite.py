@@ -1,10 +1,9 @@
 """Benchmark suite for running comprehensive optimizer comparisons."""
 
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from morphml.benchmarks.problems import BenchmarkProblem
-from morphml.core.graph import ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -254,7 +253,7 @@ class BenchmarkSuite:
         print("=" * 80)
 
         # Group by problem
-        problems = set(data["problem"] for data in summary.values())
+        problems = {data["problem"] for data in summary.values()}
 
         for problem in sorted(problems):
             print(f"\n{problem}")

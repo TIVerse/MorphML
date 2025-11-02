@@ -5,7 +5,7 @@ by exploring its neighborhood through mutations.
 
 Example:
     >>> from morphml.optimizers import HillClimbing
-    >>> 
+    >>>
     >>> hc = HillClimbing(search_space=space, max_iterations=100)
     >>> best = hc.optimize(evaluator=my_evaluator)
 """
