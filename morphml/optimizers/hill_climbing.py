@@ -24,21 +24,21 @@ logger = get_logger(__name__)
 class HillClimbing:
     """
     Hill Climbing optimizer for Neural Architecture Search.
-    
+
     Iteratively improves a single architecture by:
     1. Mutating the current architecture
     2. Evaluating the mutated version
     3. Accepting if better
     4. Repeating until no improvement
-    
+
     Simple but effective for refinement and local optimization.
-    
+
     Attributes:
         search_space: SearchSpace for initialization
         max_iterations: Maximum number of iterations
         current: Current best individual
         history: List of fitness values over iterations
-    
+
     Example:
         >>> hc = HillClimbing(
         ...     search_space=space,
@@ -59,7 +59,7 @@ class HillClimbing:
     ):
         """
         Initialize Hill Climbing optimizer.
-        
+
         Args:
             search_space: SearchSpace for initialization
             max_iterations: Maximum iterations
@@ -73,27 +73,23 @@ class HillClimbing:
         self.patience = patience
         self.num_mutations = num_mutations
         self.mutation_rate = mutation_rate
-        
+
         self.mutator = GraphMutator()
         self.current: Optional[Individual] = None
         self.history: List[float] = []
-        
-        logger.info(
-            f"Created HillClimbing: max_iterations={max_iterations}, patience={patience}"
-        )
-    
-    def optimize(
-        self, evaluator: Callable[[ModelGraph], float]
-    ) -> Individual:
+
+        logger.info(f"Created HillClimbing: max_iterations={max_iterations}, patience={patience}")
+
+    def optimize(self, evaluator: Callable[[ModelGraph], float]) -> Individual:
         """
         Run hill climbing optimization.
-        
+
         Args:
             evaluator: Function to evaluate fitness
-        
+
         Returns:
             Best individual found
-        
+
         Raises:
             OptimizerError: If optimization fails
         """
@@ -105,72 +101,66 @@ class HillClimbing:
             fitness = evaluator(self.current.graph)
             self.current.set_fitness(fitness)
             self.history.append(fitness)
-            
+
             logger.info(f"Initial fitness: {fitness:.4f}")
-            
+
             iterations_without_improvement = 0
             iteration = 0
-            
+
             while iteration < self.max_iterations:
                 iteration += 1
-                
+
                 # Generate neighbor by mutation
                 mutated_graph = self.mutator.mutate(
                     self.current.graph,
                     mutation_rate=self.mutation_rate,
                     max_mutations=self.num_mutations,
                 )
-                
+
                 # Evaluate neighbor
                 neighbor = Individual(mutated_graph)
                 neighbor_fitness = evaluator(neighbor.graph)
                 neighbor.set_fitness(neighbor_fitness)
-                
+
                 # Accept if better
                 if neighbor_fitness > self.current.fitness:
                     self.current = neighbor
                     self.history.append(neighbor_fitness)
                     iterations_without_improvement = 0
-                    logger.info(
-                        f"Iteration {iteration}: Improved to {neighbor_fitness:.4f}"
-                    )
+                    logger.info(f"Iteration {iteration}: Improved to {neighbor_fitness:.4f}")
                 else:
                     self.history.append(self.current.fitness)
                     iterations_without_improvement += 1
-                
+
                 # Check patience
                 if iterations_without_improvement >= self.patience:
-                    logger.info(
-                        f"Stopping: No improvement for {self.patience} iterations"
-                    )
+                    logger.info(f"Stopping: No improvement for {self.patience} iterations")
                     break
-                
+
                 if iteration % 10 == 0:
                     logger.debug(
                         f"Iteration {iteration}/{self.max_iterations}: "
                         f"fitness={self.current.fitness:.4f}"
                     )
-            
-            logger.info(
-                f"Hill climbing complete: Best fitness = {self.current.fitness:.4f}"
-            )
-            
+
+            logger.info(f"Hill climbing complete: Best fitness = {self.current.fitness:.4f}")
+
             return self.current
-        
+
         except Exception as e:
             logger.error(f"Hill climbing failed: {e}")
             raise OptimizerError(f"Hill climbing optimization failed: {e}") from e
-    
+
     def get_history(self) -> List[float]:
         """Get optimization history."""
         return self.history
-    
+
     def reset(self) -> None:
         """Reset optimizer state."""
         self.current = None
         self.history.clear()
         logger.info("Hill climbing reset")
-    
+
     def __repr__(self) -> str:
         """String representation."""
         return (

@@ -271,7 +271,7 @@ DEFAULT_CONFIG = {
 def get_config() -> ConfigManager:
     """
     Get default configuration manager.
-    
+
     Returns:
         ConfigManager instance with default configuration
     """

@@ -6,7 +6,7 @@ from morphml.benchmarks.problems import (
     SimpleProblem,
     ComplexProblem,
     MultiModalProblem,
-    ConstrainedProblem
+    ConstrainedProblem,
 )
 
 __all__ = [
