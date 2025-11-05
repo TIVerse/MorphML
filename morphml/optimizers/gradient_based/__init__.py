@@ -16,4 +16,7 @@ Example:
     >>> best = optimizer.optimize(evaluator)
 """
 
-__all__ = []  # Will be populated as components are implemented
+from morphml.optimizers.gradient_based.darts import DARTSOptimizer as DARTS
+from morphml.optimizers.gradient_based.enas import ENASOptimizer as ENAS
+
+__all__ = ["DARTS", "ENAS"]

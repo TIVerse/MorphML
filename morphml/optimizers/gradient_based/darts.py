@@ -298,8 +298,6 @@ class DARTSOptimizer:
         """
         Derive discrete architecture from continuous α.
         
-        TODO [GPU Required]: Test architecture derivation
-        
         For each edge, select operation with highest α value.
         
         Returns:
@@ -307,12 +305,88 @@ class DARTSOptimizer:
         """
         logger.info("Deriving discrete architecture from α...")
         
+        from morphml.core.graph import ModelGraph, GraphNode, GraphEdge
+        
         graph = ModelGraph()
         
-        # TODO: Implement architecture derivation
-        # This requires trained α parameters
+        # Check if we have trained alphas
+        if not hasattr(self, 'alphas') or self.alphas is None:
+            logger.warning("No trained architecture parameters available")
+            # Return a simple default architecture
+            input_node = GraphNode.create('input', {'shape': (3, 32, 32)})
+            output_node = GraphNode.create('output', {'units': 10})
+            graph.add_node(input_node)
+            graph.add_node(output_node)
+            graph.add_edge(GraphEdge(input_node, output_node))
+            return graph
         
-        logger.warning("TODO [GPU Required]: Implement architecture derivation")
+        if not TORCH_AVAILABLE:
+            logger.error("PyTorch required for architecture derivation")
+            return graph
+        
+        # Create nodes for the cell
+        nodes = []
+        
+        # Input nodes
+        input_node = GraphNode.create('input', {'shape': (3, 32, 32)})
+        prev_node = GraphNode.create('conv2d', {'filters': 16, 'kernel_size': 3})
+        graph.add_node(input_node)
+        graph.add_node(prev_node)
+        graph.add_edge(GraphEdge(input_node, prev_node))
+        nodes.append(prev_node)
+        
+        # Intermediate nodes - select best operations based on alpha
+        for i in range(self.num_nodes):
+            # Create node for this position
+            node_id = f"node_{i}"
+            
+            # Get alpha for this node's input edges
+            if i < len(self.alphas):
+                alpha = self.alphas[i]
+                
+                # Select best operation (argmax of alpha)
+                best_ops = []
+                for edge_idx in range(min(alpha.shape[0], len(nodes))):
+                    op_probs = torch.softmax(alpha[edge_idx], dim=0)
+                    best_op_idx = torch.argmax(op_probs).item()
+                    best_op = self.operations[best_op_idx]
+                    
+                    if best_op not in ['none', 'zero']:
+                        best_ops.append((edge_idx, best_op))
+                
+                # Create node with best operation
+                if best_ops:
+                    _, op_name = best_ops[0]  # Use first non-none operation
+                    if 'conv' in op_name:
+                        new_node = GraphNode.create('conv2d', {'filters': 32, 'kernel_size': 3})
+                    elif 'pool' in op_name:
+                        new_node = GraphNode.create('maxpool', {'pool_size': 2})
+                    else:
+                        new_node = GraphNode.create('identity', {})
+                else:
+                    new_node = GraphNode.create('identity', {})
+            else:
+                # Default operation
+                new_node = GraphNode.create('conv2d', {'filters': 32, 'kernel_size': 3})
+            
+            graph.add_node(new_node)
+            # Connect to previous node
+            if nodes:
+                graph.add_edge(GraphEdge(nodes[-1], new_node))
+            nodes.append(new_node)
+        
+        # Output node
+        flatten_node = GraphNode.create('flatten', {})
+        output_node = GraphNode.create('dense', {'units': 10})
+        
+        graph.add_node(flatten_node)
+        graph.add_node(output_node)
+        
+        if nodes:
+            graph.add_edge(GraphEdge(nodes[-1], flatten_node))
+        graph.add_edge(GraphEdge(flatten_node, output_node))
+        
+        logger.info(f"Derived architecture with {len(graph.nodes)} nodes")
         
         return graph
     
