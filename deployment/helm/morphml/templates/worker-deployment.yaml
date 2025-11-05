@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "morphml.fullname" . }}-worker
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      {{- include "morphml.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        {{- include "morphml.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: worker
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "morphml.serviceAccountName" . }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+        env:
+        - name: MORPHML_ROLE
+          value: "worker"
+        - name: MORPHML_MASTER_HOST
+          value: {{ include "morphml.fullname" . }}-master
+        - name: MORPHML_MASTER_PORT
+          value: "50051"
+        - name: MORPHML_WORKER_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MORPHML_WORKER_PORT
+          value: "50052"
+        - name: POSTGRES_HOST
+          value: {{ include "morphml.postgresql.fullname" . }}
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: {{ .Values.postgresql.auth.database }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "morphml.fullname" . }}-secrets
+              key: postgres-username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "morphml.fullname" . }}-secrets
+              key: postgres-password
+        - name: REDIS_HOST
+          value: {{ include "morphml.redis.fullname" . }}-master
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "morphml.fullname" . }}-secrets
+              key: redis-password
+        - name: MINIO_ENDPOINT
+          value: {{ include "morphml.minio.fullname" . }}:9000
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "morphml.fullname" . }}-secrets
+              key: minio-access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "morphml.fullname" . }}-secrets
+              key: minio-secret-key
+        - name: MINIO_BUCKET
+          value: "morphml-artifacts"
+        resources:
+          {{- toYaml .Values.worker.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8001
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+        - name: config
+          mountPath: /etc/morphml
+        - name: shm
+          mountPath: /dev/shm
+      volumes:
+      - name: workspace
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: {{ include "morphml.fullname" . }}-config
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 2Gi
