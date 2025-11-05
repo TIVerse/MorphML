@@ -198,7 +198,7 @@ for filepath, name in optimizers:
         test_fail(f"{name}: {filepath} NOT FOUND")
 
 # Check crossover
-if Path("morphml/core/crossover.py").exists():
+if Path("../morphml/core/crossover.py").exists():
     test_pass("Crossover operators")
 else:
     test_fail("Crossover operators NOT FOUND")

@@ -2,7 +2,10 @@
 name = "morphml"
 version = "0.1.0"
 description = "Production-grade Neural Architecture Search framework with distributed optimization"
-authors = ["Eshan Roy <eshanized@proton.me>"]
+authors = [
+    "Eshan Roy <eshanized@proton.me>",
+    "Vedanth <vedanth@vedanthq.com>"
+]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/TIVerse/MorphML"

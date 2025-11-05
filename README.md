@@ -264,7 +264,9 @@ MorphML is released under the [MIT License](LICENSE).
 
 Built with ❤️ by [TONMOY INFRASTRUCTURE & VISION](https://github.com/TIVerse)
 
-**Author:** Eshan Roy ([@eshanized](https://github.com/eshanized))
+**Maintainers:**
+- Eshan Roy ([@eshanized](https://github.com/eshanized))
+- Vedanth ([@vedanthq](https://github.com/vedanthq))
 
 ---
 

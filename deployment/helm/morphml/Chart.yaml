@@ -19,7 +19,9 @@ sources:
 maintainers:
   - name: Eshan Roy
     email: eshanized@proton.me
-    url: https://github.com/TIVerse
+    url: https://github.com/eshanized
+  - name: Vedanth
+    url: https://github.com/vedanthq
 
 icon: https://raw.githubusercontent.com/TIVerse/MorphML/main/docs/logo.png
 

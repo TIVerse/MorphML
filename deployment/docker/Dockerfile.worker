@@ -1,10 +1,10 @@
 # Dockerfile for MorphML Worker Node (with GPU support)
-# Author: Eshan Roy <eshanized@proton.me>
+# Authors: Eshan Roy <eshanized@proton.me>, Vedanth (vedanthq)
 # Organization: TONMOY INFRASTRUCTURE & VISION
 
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-LABEL maintainer="Eshan Roy <eshanized@proton.me>"
+LABEL maintainer="Eshan Roy <eshanized@proton.me>, Vedanth <vedanthq>"
 LABEL description="MorphML Worker Node with GPU support for distributed NAS"
 LABEL version="1.0.0"
 
