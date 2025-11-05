@@ -52,6 +52,8 @@ grpcio-tools = { version = "^1.54.0", optional = true }
 protobuf = { version = "^4.23.0", optional = true }
 pyzmq = { version = "^25.0.0", optional = true }
 psutil = "^5.9.0"
+# Phase 3: Kubernetes Management
+kubernetes = { version = "^28.1.0", optional = true }
 # Phase 3: Distributed Storage
 sqlalchemy = { version = "^2.0.0", optional = true }
 psycopg2-binary = { version = "^2.9.0", optional = true }
@@ -75,11 +77,11 @@ morphml = "morphml.cli.main:cli"
 bayesian = ["gpytorch", "botorch"]
 gradient = ["torch"]
 advanced = ["cma"]
-distributed = ["grpcio", "grpcio-tools", "protobuf"]
+distributed = ["grpcio", "grpcio-tools", "protobuf", "kubernetes"]
 messaging = ["pyzmq"]
 storage = ["sqlalchemy", "psycopg2-binary", "redis", "boto3"]
 gpu = ["torch", "gpytorch", "botorch"]
-all = ["gpytorch", "botorch", "torch", "cma", "grpcio", "grpcio-tools", "protobuf", "pyzmq", "sqlalchemy", "psycopg2-binary", "redis", "boto3"]
+all = ["gpytorch", "botorch", "torch", "cma", "grpcio", "grpcio-tools", "protobuf", "pyzmq", "sqlalchemy", "psycopg2-binary", "redis", "boto3", "kubernetes"]
 
 [build-system]
 requires = ["poetry-core"]
