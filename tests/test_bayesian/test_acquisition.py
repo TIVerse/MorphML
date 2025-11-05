@@ -9,9 +9,9 @@ import pytest
 
 from morphml.optimizers.bayesian.acquisition import (
     expected_improvement,
-    upper_confidence_bound,
-    probability_of_improvement,
     lower_confidence_bound,
+    probability_of_improvement,
+    upper_confidence_bound,
 )
 
 
@@ -161,5 +161,5 @@ class TestAcquisitionFunctions:
         assert not np.isnan(pi[0])
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

@@ -67,7 +67,7 @@ def plot_graph(
         G.add_node(node_id, label=label, operation=node.operation)
 
     # Add edges
-    for edge_id, edge in graph.edges.items():
+    for _edge_id, edge in graph.edges.items():
         if edge.source and edge.target:
             G.add_edge(edge.source.id, edge.target.id)
 
@@ -91,13 +91,9 @@ def plot_graph(
     node_colors = _get_node_colors(graph)
 
     # Draw graph
-    nx.draw_networkx_nodes(
-        G, pos, node_color=node_colors, node_size=node_size, alpha=0.9, ax=ax
-    )
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_size, alpha=0.9, ax=ax)
 
-    nx.draw_networkx_edges(
-        G, pos, edge_color="gray", arrows=True, arrowsize=20, alpha=0.6, ax=ax
-    )
+    nx.draw_networkx_edges(G, pos, edge_color="gray", arrows=True, arrowsize=20, alpha=0.6, ax=ax)
 
     if with_labels:
         labels = nx.get_node_attributes(G, "label")
@@ -142,6 +138,7 @@ def _hierarchical_layout(graph: ModelGraph, G) -> Dict:
     except Exception:
         # Fallback to spring layout if topological sort fails
         import networkx as nx
+
         return nx.spring_layout(G)
 
     # Group nodes by depth level
@@ -154,7 +151,7 @@ def _hierarchical_layout(graph: ModelGraph, G) -> Dict:
 
     # Assign positions
     pos = {}
-    max_width = max(len(nodes) for nodes in levels.values())
+    max(len(nodes) for nodes in levels.values())
 
     for level, node_ids in sorted(levels.items()):
         y = -level  # Negative so it goes downward
@@ -362,7 +359,7 @@ def _plot_graph_on_axis(graph: ModelGraph, ax, title: str) -> None:
     for node_id, node in graph.nodes.items():
         G.add_node(node_id, label=node.operation)
 
-    for edge_id, edge in graph.edges.items():
+    for _edge_id, edge in graph.edges.items():
         if edge.source and edge.target:
             G.add_edge(edge.source.id, edge.target.id)
 
@@ -405,7 +402,7 @@ def export_graphviz(graph: ModelGraph, output_path: Union[str, Path]) -> None:
     lines.append("")
 
     # Add edges
-    for edge_id, edge in graph.edges.items():
+    for _edge_id, edge in graph.edges.items():
         if edge.source and edge.target:
             src = edge.source.id[:8]
             tgt = edge.target.id[:8]

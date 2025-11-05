@@ -10,10 +10,10 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional
 
+from morphml.core.dsl.search_space import SearchSpace
 from morphml.core.graph import ModelGraph
 from morphml.core.search.individual import Individual
 from morphml.core.search.population import Population
-from morphml.core.dsl.search_space import SearchSpace
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -136,7 +136,9 @@ class SearchEngine(ABC):
         self.config["max_generations"] = max_generations
         callbacks = callbacks or []
 
-        logger.info(f"Starting search with population_size={population_size}, max_generations={max_generations}")
+        logger.info(
+            f"Starting search with population_size={population_size}, max_generations={max_generations}"
+        )
 
         # Initialize population
         population = self.initialize_population(population_size)
@@ -175,7 +177,9 @@ class SearchEngine(ABC):
 
             self.generation += 1
 
-        logger.info(f"Search complete after {self.generation} generations, {self.num_evaluations} evaluations")
+        logger.info(
+            f"Search complete after {self.generation} generations, {self.num_evaluations} evaluations"
+        )
         logger.info(f"Best fitness: {self.best_individual.fitness:.4f}")
 
         return self.best_individual
@@ -201,7 +205,9 @@ class SearchEngine(ABC):
             "generation": self.generation,
             "best_fitness": population.best_fitness(),
             "mean_fitness": population.average_fitness(),
-            "worst_fitness": min(ind.fitness for ind in population.individuals if ind.fitness is not None),
+            "worst_fitness": min(
+                ind.fitness for ind in population.individuals if ind.fitness is not None
+            ),
             "diversity": population.diversity_metric(),
             "num_evaluations": self.num_evaluations,
         }

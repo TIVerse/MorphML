@@ -134,35 +134,31 @@ print("\n📋 Required Classes:")
 
 # Check for parameter classes
 try:
-    from morphml.core.search.parameters import (
-        Parameter,
-        CategoricalParameter,
-        IntegerParameter,
-        FloatParameter,
-        BooleanParameter,
+
+    test_pass(
+        "Parameter classes (CategoricalParameter, IntegerParameter, FloatParameter, BooleanParameter)"
     )
-    test_pass("Parameter classes (CategoricalParameter, IntegerParameter, FloatParameter, BooleanParameter)")
 except Exception as e:
     test_fail("Parameter classes", e)
 
 # Check for search engine
 try:
-    from morphml.core.search.search_engine import SearchEngine
+
     test_pass("SearchEngine base class")
 except Exception as e:
     test_fail("SearchEngine base class", e)
 
 # Check for population management
 try:
-    from morphml.core.search.individual import Individual
     from morphml.core.search.population import Population
+
     test_pass("Individual and Population classes")
 except Exception as e:
     test_fail("Individual and Population classes", e)
 
 # Check for search space
 try:
-    from morphml.core.dsl.search_space import SearchSpace
+
     test_pass("SearchSpace class")
 except Exception as e:
     test_fail("SearchSpace class", e)
@@ -170,10 +166,11 @@ except Exception as e:
 print("\n📋 Selection Strategies:")
 try:
     from morphml.core.search.population import Population
+
     p = Population()
-    
+
     # Check if selection methods exist
-    if hasattr(p, 'select'):
+    if hasattr(p, "select"):
         test_pass("Selection methods available")
     else:
         test_fail("Selection methods not found")
@@ -260,6 +257,7 @@ important_files = [
 ]
 
 import py_compile
+
 compilation_errors = []
 
 for filepath in important_files:

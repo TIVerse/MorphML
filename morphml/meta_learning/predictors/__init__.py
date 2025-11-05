@@ -10,9 +10,9 @@ Author: Eshan Roy <eshanized@proton.me>
 Organization: TONMOY INFRASTRUCTURE & VISION
 """
 
-from morphml.meta_learning.predictors.proxy_metrics import ProxyMetricPredictor
-from morphml.meta_learning.predictors.learning_curve import LearningCurvePredictor
 from morphml.meta_learning.predictors.ensemble import EnsemblePredictor
+from morphml.meta_learning.predictors.learning_curve import LearningCurvePredictor
+from morphml.meta_learning.predictors.proxy_metrics import ProxyMetricPredictor
 
 __all__ = [
     "ProxyMetricPredictor",
@@ -22,7 +22,7 @@ __all__ = [
 
 # Optional GNN predictor (requires PyTorch)
 try:
-    from morphml.meta_learning.predictors.gnn_predictor import GNNPredictor
+
     __all__.append("GNNPredictor")
 except ImportError:
     pass

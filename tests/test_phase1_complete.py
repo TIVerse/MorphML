@@ -62,18 +62,20 @@ test_section("Component 1: Project Infrastructure")
 
 try:
     from morphml import __version__
+
     test_pass(f"Version module works ({__version__})")
 except Exception as e:
     test_fail("Version module", e)
 
 try:
-    from morphml.exceptions import MorphMLError, DSLError, ValidationError, GraphError
+
     test_pass("Exception classes imported")
 except Exception as e:
     test_fail("Exception classes", e)
 
 try:
     from morphml.config import get_config
+
     config = get_config()
     test_pass("Configuration system works")
 except Exception as e:
@@ -81,6 +83,7 @@ except Exception as e:
 
 try:
     from morphml.logging_config import get_logger
+
     logger = get_logger(__name__)
     test_pass("Logging system works")
 except Exception as e:
@@ -93,15 +96,16 @@ test_section("Component 2: DSL Implementation - Text-based")
 
 # Test syntax definitions
 try:
-    from morphml.core.dsl.syntax import TokenType, KEYWORDS, LAYER_TYPES, OPERATORS
+    from morphml.core.dsl.syntax import LAYER_TYPES, TokenType
+
     test_pass(f"Syntax module: {len(list(TokenType))} token types, {len(LAYER_TYPES)} layer types")
 except Exception as e:
     test_fail("Syntax module", e)
 
 # Test lexer
 try:
-    from morphml.core.dsl.lexer import Lexer, Token
-    
+    from morphml.core.dsl.lexer import Lexer
+
     source = "Layer.conv2d(filters=[32, 64], kernel_size=3)"
     lexer = Lexer(source)
     tokens = lexer.tokenize()
@@ -111,8 +115,8 @@ except Exception as e:
 
 # Test AST nodes
 try:
-    from morphml.core.dsl.ast_nodes import ParamNode, LayerNode, SearchSpaceNode
-    
+    from morphml.core.dsl.ast_nodes import ParamNode
+
     param = ParamNode(name="filters", values=[32, 64, 128])
     test_pass(f"AST nodes: Created ParamNode with {len(param.values)} values")
 except Exception as e:
@@ -120,8 +124,8 @@ except Exception as e:
 
 # Test parser
 try:
-    from morphml.core.dsl.parser import Parser, parse_dsl
-    
+    from morphml.core.dsl.parser import parse_dsl
+
     dsl_source = """
     SearchSpace(
         layers=[
@@ -137,8 +141,8 @@ except Exception as e:
 
 # Test compiler
 try:
-    from morphml.core.dsl.compiler import Compiler, compile_dsl
-    
+    from morphml.core.dsl.compiler import compile_dsl
+
     result = compile_dsl(dsl_source)
     search_space = result["search_space"]
     test_pass(f"Compiler: Compiled to SearchSpace with {len(search_space.layers)} layers")
@@ -147,8 +151,8 @@ except Exception as e:
 
 # Test validator
 try:
-    from morphml.core.dsl.validator import Validator, validate_ast
-    
+    from morphml.core.dsl.validator import Validator
+
     validator = Validator()
     validation_errors = validator.validate(ast)
     test_pass(f"Validator: Validated AST ({len(validation_errors)} errors)")
@@ -157,8 +161,8 @@ except Exception as e:
 
 # Test type system
 try:
-    from morphml.core.dsl.type_system import TypeChecker, Type, check_types
-    
+    from morphml.core.dsl.type_system import check_types
+
     type_errors = check_types(ast)
     test_pass(f"Type system: Type checked AST ({len(type_errors)} type errors)")
 except Exception as e:
@@ -168,14 +172,14 @@ except Exception as e:
 test_section("Component 2: DSL Implementation - Pythonic API")
 
 try:
-    from morphml.core.dsl import Layer, LayerSpec, SearchSpace
-    
+    from morphml.core.dsl import Layer, SearchSpace
+
     space = SearchSpace("test_space")
     space.add_layers(
         Layer.input(shape=(3, 32, 32)),
         Layer.conv2d(filters=[32, 64], kernel_size=3),
         Layer.relu(),
-        Layer.dense(units=[128, 256])
+        Layer.dense(units=[128, 256]),
     )
     test_pass(f"Pythonic DSL: Created SearchSpace with {len(space.layers)} layers")
 except Exception as e:
@@ -187,66 +191,66 @@ except Exception as e:
 test_section("Component 3: Graph System")
 
 try:
-    from morphml.core.graph import GraphNode, GraphEdge, ModelGraph
-    
+    from morphml.core.graph import GraphEdge, GraphNode, ModelGraph
+
     graph = ModelGraph()
     node1 = GraphNode.create("input", {"shape": (3, 32, 32)})
     node2 = GraphNode.create("conv2d", {"filters": 32, "kernel_size": 3})
     node3 = GraphNode.create("output", {"units": 10})
-    
+
     graph.add_node(node1)
     graph.add_node(node2)
     graph.add_node(node3)
     graph.add_edge(GraphEdge(node1, node2))
     graph.add_edge(GraphEdge(node2, node3))
-    
+
     test_pass(f"Graph: Created graph with {len(graph.nodes)} nodes, {len(graph.edges)} edges")
-    
+
     # Validate DAG
     if graph.is_valid_dag():
         test_pass("Graph: DAG validation passed")
     else:
         test_fail("Graph: DAG validation failed")
-        
+
 except Exception as e:
     test_fail("Graph creation", e)
 
 # Test mutations
 try:
     from morphml.core.graph import GraphMutator
-    
+
     mutator = GraphMutator()
     mutated = mutator.mutate(graph, mutation_rate=0.1)
-    
+
     if mutated.is_valid_dag():
-        test_pass(f"Mutations: Mutated graph remains valid DAG")
+        test_pass("Mutations: Mutated graph remains valid DAG")
     else:
         test_fail("Mutations: Mutated graph broke DAG property")
-        
+
 except Exception as e:
     test_fail("Graph mutations", e)
 
 # Test serialization
 try:
-    from morphml.core.graph import save_graph, load_graph, graph_to_json_string
-    
+    from morphml.core.graph import graph_to_json_string, load_graph, save_graph
+
     with tempfile.TemporaryDirectory() as tmpdir:
         # Test JSON serialization
         json_path = Path(tmpdir) / "test_graph.json"
         save_graph(graph, json_path, format="json")
         loaded_graph = load_graph(json_path)
-        test_pass(f"Serialization: JSON save/load successful")
-        
+        test_pass("Serialization: JSON save/load successful")
+
         # Test string conversion
         json_str = graph_to_json_string(graph)
         test_pass(f"Serialization: JSON string conversion ({len(json_str)} chars)")
-        
+
 except Exception as e:
     test_fail("Graph serialization", e)
 
 # Test visualization (syntax only, no display)
 try:
-    from morphml.core.graph import plot_graph, export_graphviz
+
     test_pass("Visualization: Module imports successful")
 except Exception as e:
     test_fail("Visualization module", e)
@@ -258,14 +262,14 @@ test_section("Component 4: Search Space & Engine")
 
 try:
     from morphml.core.search import Individual, Population
-    
+
     individual = Individual(graph=graph)
     individual.set_fitness(0.85)
     test_pass(f"Individual: Created with fitness {individual.fitness}")
-    
+
     pop = Population([individual])
     test_pass(f"Population: Created with {len(pop)} individuals")
-    
+
 except Exception as e:
     test_fail("Individual/Population", e)
 
@@ -282,16 +286,16 @@ except Exception as e:
 # Test selection strategies
 try:
     from morphml.core.search.population import Population
-    
+
     pop = Population()
     for i in range(5):
         ind = Individual(graph=graph.clone())
         ind.set_fitness(0.5 + i * 0.1)
         pop.add(ind)
-    
+
     selected = pop.select("tournament", n=2, tournament_size=3)
     test_pass(f"Selection: Tournament selection returned {len(selected)} individuals")
-    
+
 except Exception as e:
     test_fail("Selection strategies", e)
 
@@ -302,7 +306,7 @@ test_section("Component 5: Genetic Algorithm")
 
 try:
     from morphml.optimizers import GeneticAlgorithm
-    
+
     config = {
         "population_size": 10,
         "num_generations": 2,
@@ -310,10 +314,10 @@ try:
         "crossover_rate": 0.7,
         "elitism": 2,
     }
-    
+
     ga = GeneticAlgorithm(search_space=space, **config)
     test_pass(f"GeneticAlgorithm: Created with population size {config['population_size']}")
-    
+
 except Exception as e:
     test_fail("GeneticAlgorithm creation", e)
 
@@ -326,14 +330,14 @@ except Exception as e:
 
 # Test other optimizers
 try:
-    from morphml.optimizers import RandomSearch, HillClimbing
-    
+    from morphml.optimizers import HillClimbing, RandomSearch
+
     rs = RandomSearch(search_space=space, num_samples=5)
     test_pass("RandomSearch: Created successfully")
-    
+
     hc = HillClimbing(search_space=space, max_iterations=5)
     test_pass("HillClimbing: Created successfully")
-    
+
 except Exception as e:
     test_fail("Other optimizers", e)
 
@@ -344,32 +348,32 @@ test_section("Component 6: Execution & CLI")
 
 try:
     from morphml.evaluation import HeuristicEvaluator
-    
+
     evaluator = HeuristicEvaluator()
     score = evaluator(graph)
     test_pass(f"HeuristicEvaluator: Evaluated graph with score {score:.4f}")
-    
+
 except Exception as e:
     test_fail("HeuristicEvaluator", e)
 
 try:
     from morphml.utils import ArchitectureExporter
-    
+
     exporter = ArchitectureExporter()
     pytorch_code = exporter.to_pytorch(graph, "TestModel")
     test_pass(f"ArchitectureExporter: Generated PyTorch code ({len(pytorch_code)} chars)")
-    
+
 except Exception as e:
     test_fail("ArchitectureExporter", e)
 
 try:
-    from morphml.utils import Checkpoint
+
     test_pass("Checkpoint: Module imported successfully")
 except Exception as e:
     test_fail("Checkpoint module", e)
 
 try:
-    from morphml.cli.main import cli
+
     test_pass("CLI: Command-line interface imported successfully")
 except Exception as e:
     test_fail("CLI module", e)

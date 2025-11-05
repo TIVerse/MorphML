@@ -62,7 +62,7 @@ def count_lines(path):
     try:
         with open(path, "r") as f:
             return len([line for line in f if line.strip() and not line.strip().startswith("#")])
-    except:
+    except Exception:
         return 0
 
 

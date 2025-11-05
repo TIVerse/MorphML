@@ -12,7 +12,7 @@ Features:
 Example:
     >>> from morphml.benchmarking import OptimizerComparison, compare_optimizers
     >>> from morphml.optimizers import GeneticAlgorithm, optimize_with_pso
-    >>> 
+    >>>
     >>> # Quick comparison
     >>> results = compare_optimizers(
     ...     optimizers={

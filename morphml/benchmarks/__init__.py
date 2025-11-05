@@ -1,6 +1,16 @@
 """Benchmark suite for NAS optimizers."""
 
-from morphml.benchmarks.comparator import OptimizerComparator, ConvergenceAnalyzer
+from morphml.benchmarks.comparator import ConvergenceAnalyzer, OptimizerComparator
+
+# Phase 2: Extended benchmarking
+from morphml.benchmarks.datasets import DatasetLoader, get_dataset_info
+from morphml.benchmarks.metrics import (
+    compare_optimizers,
+    compute_all_metrics,
+    convergence_rate,
+    final_best_fitness,
+    sample_efficiency,
+)
 from morphml.benchmarks.problems import (
     ComplexProblem,
     ConstrainedProblem,
@@ -8,21 +18,12 @@ from morphml.benchmarks.problems import (
     SimpleProblem,
     get_all_problems,
 )
-from morphml.benchmarks.suite import BenchmarkSuite, BenchmarkResult
-
-# Phase 2: Extended benchmarking
-from morphml.benchmarks.datasets import DatasetLoader, get_dataset_info
-from morphml.benchmarks.metrics import (
-    sample_efficiency,
-    convergence_rate,
-    final_best_fitness,
-    compute_all_metrics,
-    compare_optimizers,
-)
+from morphml.benchmarks.suite import BenchmarkResult, BenchmarkSuite
 
 # OpenML integration (optional)
 try:
     from morphml.benchmarks.openml_suite import OpenMLSuite, run_openml_benchmark
+
     _OPENML_AVAILABLE = True
 except ImportError:
     OpenMLSuite = None

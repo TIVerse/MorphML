@@ -11,12 +11,12 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
+from morphml.config import get_config
 from morphml.core.dsl.search_space import SearchSpace
 from morphml.core.search.search_engine import SearchEngine
 from morphml.evaluation.heuristic import HeuristicEvaluator
-from morphml.utils.checkpoint import Checkpoint
 from morphml.logging_config import get_logger
-from morphml.config import get_config
+from morphml.utils.checkpoint import Checkpoint
 
 logger = get_logger(__name__)
 
@@ -121,9 +121,7 @@ class LocalExecutor:
         if verbose:
             self.logger.info("Initializing population...")
 
-        population = optimizer.initialize_population(
-            optimizer.config.get("population_size", 50)
-        )
+        population = optimizer.initialize_population(optimizer.config.get("population_size", 50))
 
         if verbose:
             self.logger.info(f"Population initialized with {len(population)} individuals")

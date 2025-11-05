@@ -5,14 +5,14 @@ for neural architecture search experiments.
 
 Example:
     >>> from morphml.reports import ReportGenerator, create_comparison_report
-    >>> 
+    >>>
     >>> # Quick report
     >>> create_comparison_report(
     ...     "My Experiment",
     ...     comparison_results,
     ...     "report.html"
     ... )
-    
+
     >>> # Custom report
     >>> generator = ReportGenerator("Custom Report")
     >>> generator.add_section("Results", content)

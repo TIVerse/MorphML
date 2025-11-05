@@ -9,8 +9,8 @@ import pytest
 from morphml.benchmarks.datasets import (
     DatasetLoader,
     get_dataset_info,
-    load_mnist,
     load_fashion_mnist,
+    load_mnist,
 )
 
 
@@ -53,27 +53,27 @@ class TestDatasetLoaders:
 
     def test_get_dataset_info(self):
         """Test dataset info retrieval."""
-        info = get_dataset_info('mnist')
+        info = get_dataset_info("mnist")
 
-        assert info['name'] == 'MNIST'
-        assert info['num_classes'] == 10
-        assert info['input_shape'] == (784,)
-        assert info['train_size'] == 60000
-        assert info['test_size'] == 10000
+        assert info["name"] == "MNIST"
+        assert info["num_classes"] == 10
+        assert info["input_shape"] == (784,)
+        assert info["train_size"] == 60000
+        assert info["test_size"] == 10000
 
     def test_dataset_loader_class(self):
         """Test DatasetLoader unified interface."""
         # List available datasets
         datasets = DatasetLoader.list_available()
 
-        assert 'mnist' in datasets
-        assert 'fashion_mnist' in datasets
-        assert 'cifar10' in datasets
+        assert "mnist" in datasets
+        assert "fashion_mnist" in datasets
+        assert "cifar10" in datasets
 
     def test_dataset_loader_load(self):
         """Test DatasetLoader.load() method."""
         try:
-            X_train, y_train, X_test, y_test = DatasetLoader.load('mnist', normalize=True)
+            X_train, y_train, X_test, y_test = DatasetLoader.load("mnist", normalize=True)
 
             assert X_train is not None
             assert y_train is not None
@@ -86,8 +86,8 @@ class TestDatasetLoaders:
     def test_unknown_dataset(self):
         """Test loading unknown dataset."""
         with pytest.raises(ValueError):
-            DatasetLoader.load('unknown_dataset')
+            DatasetLoader.load("unknown_dataset")
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

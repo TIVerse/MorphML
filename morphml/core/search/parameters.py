@@ -396,9 +396,7 @@ class ConstantParameter(Parameter):
 
 
 # Factory function for creating parameters from specification
-def create_parameter(
-    name: str, spec: Union[List, tuple, dict, Any]
-) -> Parameter:
+def create_parameter(name: str, spec: Union[List, tuple, dict, Any]) -> Parameter:
     """
     Create parameter from specification.
 
@@ -432,9 +430,7 @@ def create_parameter(
         param_type = spec.get("type", "categorical")
 
         if param_type == "categorical":
-            return CategoricalParameter(
-                name, spec["choices"], spec.get("probabilities")
-            )
+            return CategoricalParameter(name, spec["choices"], spec.get("probabilities"))
         elif param_type == "integer":
             return IntegerParameter(
                 name,
@@ -444,9 +440,7 @@ def create_parameter(
                 spec.get("step", 1),
             )
         elif param_type == "float":
-            return FloatParameter(
-                name, spec["low"], spec["high"], spec.get("log_scale", False)
-            )
+            return FloatParameter(name, spec["low"], spec["high"], spec.get("log_scale", False))
         elif param_type == "boolean":
             return BooleanParameter(name, spec.get("probability", 0.5))
         elif param_type == "constant":

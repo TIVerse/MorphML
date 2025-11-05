@@ -287,7 +287,7 @@ def export_graph_summary(graph: ModelGraph, path: Union[str, Path]) -> None:
     # Edges
     lines.append("EDGES:")
     lines.append("-" * 60)
-    for edge_id, edge in graph.edges.items():
+    for _edge_id, edge in graph.edges.items():
         src = edge.source.id[:8] if edge.source else "None"
         tgt = edge.target.id[:8] if edge.target else "None"
         lines.append(f"  {src}... -> {tgt}...")
@@ -327,7 +327,9 @@ def batch_save_graphs(
     logger.info(f"Saved {len(graphs)} graphs to {output_dir}")
 
 
-def batch_load_graphs(input_dir: Union[str, Path], format: Optional[str] = None) -> Dict[str, ModelGraph]:
+def batch_load_graphs(
+    input_dir: Union[str, Path], format: Optional[str] = None
+) -> Dict[str, ModelGraph]:
     """
     Load all graphs from directory.
 

@@ -1,20 +1,20 @@
 """Search space and optimization components."""
 
 from morphml.core.search.individual import Individual
-from morphml.core.search.population import Population
 from morphml.core.search.parameters import (
-    Parameter,
-    CategoricalParameter,
-    IntegerParameter,
-    FloatParameter,
     BooleanParameter,
+    CategoricalParameter,
     ConstantParameter,
+    FloatParameter,
+    IntegerParameter,
+    Parameter,
     create_parameter,
 )
+from morphml.core.search.population import Population
 from morphml.core.search.search_engine import (
-    SearchEngine,
-    RandomSearchEngine,
     GridSearchEngine,
+    RandomSearchEngine,
+    SearchEngine,
 )
 
 __all__ = [

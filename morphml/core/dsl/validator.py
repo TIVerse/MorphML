@@ -172,7 +172,9 @@ class Validator(ASTVisitor):
 
         super().visit_layer(node)
 
-    def _validate_layer_param(self, layer_type: str, param_name: str, param_node: ParamNode) -> None:
+    def _validate_layer_param(
+        self, layer_type: str, param_name: str, param_node: ParamNode
+    ) -> None:
         """
         Validate a layer parameter.
 
@@ -205,62 +207,86 @@ class Validator(ASTVisitor):
         for value in param_node.values:
             if not isinstance(value, int):
                 self.errors.append(
-                    ValidationError(f"Filter count must be integer, got {type(value).__name__}", "Parameter")
+                    ValidationError(
+                        f"Filter count must be integer, got {type(value).__name__}", "Parameter"
+                    )
                 )
             elif value <= 0:
-                self.errors.append(ValidationError(f"Filter count must be positive, got {value}", "Parameter"))
+                self.errors.append(
+                    ValidationError(f"Filter count must be positive, got {value}", "Parameter")
+                )
 
     def _validate_kernel_size(self, param_node: ParamNode) -> None:
         """Validate kernel size parameter."""
         for value in param_node.values:
             if not isinstance(value, int):
                 self.errors.append(
-                    ValidationError(f"Kernel size must be integer, got {type(value).__name__}", "Parameter")
+                    ValidationError(
+                        f"Kernel size must be integer, got {type(value).__name__}", "Parameter"
+                    )
                 )
             elif value <= 0:
-                self.errors.append(ValidationError(f"Kernel size must be positive, got {value}", "Parameter"))
+                self.errors.append(
+                    ValidationError(f"Kernel size must be positive, got {value}", "Parameter")
+                )
             elif value % 2 == 0:
-                self.warnings.append(f"Kernel size {value} is even (odd sizes are typically preferred)")
+                self.warnings.append(
+                    f"Kernel size {value} is even (odd sizes are typically preferred)"
+                )
 
     def _validate_units(self, param_node: ParamNode) -> None:
         """Validate units parameter for dense layers."""
         for value in param_node.values:
             if not isinstance(value, int):
                 self.errors.append(
-                    ValidationError(f"Units must be integer, got {type(value).__name__}", "Parameter")
+                    ValidationError(
+                        f"Units must be integer, got {type(value).__name__}", "Parameter"
+                    )
                 )
             elif value <= 0:
-                self.errors.append(ValidationError(f"Units must be positive, got {value}", "Parameter"))
+                self.errors.append(
+                    ValidationError(f"Units must be positive, got {value}", "Parameter")
+                )
 
     def _validate_dropout_rate(self, param_node: ParamNode) -> None:
         """Validate dropout rate parameter."""
         for value in param_node.values:
             if not isinstance(value, (int, float)):
                 self.errors.append(
-                    ValidationError(f"Dropout rate must be numeric, got {type(value).__name__}", "Parameter")
+                    ValidationError(
+                        f"Dropout rate must be numeric, got {type(value).__name__}", "Parameter"
+                    )
                 )
             elif not (0 <= value < 1):
-                self.errors.append(ValidationError(f"Dropout rate must be in [0, 1), got {value}", "Parameter"))
+                self.errors.append(
+                    ValidationError(f"Dropout rate must be in [0, 1), got {value}", "Parameter")
+                )
 
     def _validate_pool_size(self, param_node: ParamNode) -> None:
         """Validate pooling size parameter."""
         for value in param_node.values:
             if not isinstance(value, int):
                 self.errors.append(
-                    ValidationError(f"Pool size must be integer, got {type(value).__name__}", "Parameter")
+                    ValidationError(
+                        f"Pool size must be integer, got {type(value).__name__}", "Parameter"
+                    )
                 )
             elif value <= 0:
-                self.errors.append(ValidationError(f"Pool size must be positive, got {value}", "Parameter"))
+                self.errors.append(
+                    ValidationError(f"Pool size must be positive, got {value}", "Parameter")
+                )
 
     def visit_param(self, node: ParamNode) -> None:
         """Validate parameter node."""
         # Check values list is not empty
         if not node.values:
-            self.errors.append(ValidationError(f"Parameter '{node.name}' has no values", "Parameter"))
+            self.errors.append(
+                ValidationError(f"Parameter '{node.name}' has no values", "Parameter")
+            )
 
         # Check type consistency
         if len(node.values) > 1:
-            types = set(type(v) for v in node.values)
+            types = {type(v) for v in node.values}
             # Allow mixing int and float
             if types - {int, float}:
                 if len(types) > 1 and not (types <= {int, float}):

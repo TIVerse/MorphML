@@ -119,7 +119,8 @@ class Parser:
                 # Global parameter
                 param_value = self._parse_value_expr()
                 global_params[param_name] = ParamNode(
-                    name=param_name, values=param_value if isinstance(param_value, list) else [param_value]
+                    name=param_name,
+                    values=param_value if isinstance(param_value, list) else [param_value],
                 )
 
             # Optional comma

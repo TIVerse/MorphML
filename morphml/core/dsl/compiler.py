@@ -16,9 +16,8 @@ from morphml.core.dsl.ast_nodes import (
     ParamNode,
     SearchSpaceNode,
 )
-from morphml.core.dsl.layers import Layer, LayerSpec
+from morphml.core.dsl.layers import LayerSpec
 from morphml.core.dsl.search_space import SearchSpace
-from morphml.exceptions import ValidationError
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)

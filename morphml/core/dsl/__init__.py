@@ -16,26 +16,26 @@ MorphML provides two approaches to defining search spaces:
 """
 
 # Pythonic API (Primary interface)
+from morphml.core.dsl.ast_nodes import (
+    ASTNode,
+    ASTVisitor,
+    ConstraintNode,
+    EvolutionNode,
+    ExperimentNode,
+    LayerNode,
+    ParamNode,
+    SearchSpaceNode,
+)
+from morphml.core.dsl.compiler import Compiler, compile_dsl, compile_to_search_space
 from morphml.core.dsl.layers import Layer, LayerSpec
+from morphml.core.dsl.lexer import Lexer, Token
+from morphml.core.dsl.parser import Parser, parse_dsl
 from morphml.core.dsl.search_space import SearchSpace, create_cnn_space, create_mlp_space
 
 # Text-based DSL components
-from morphml.core.dsl.syntax import TokenType, KEYWORDS, LAYER_TYPES, OPERATORS
-from morphml.core.dsl.lexer import Lexer, Token
-from morphml.core.dsl.parser import Parser, parse_dsl
-from morphml.core.dsl.ast_nodes import (
-    ASTNode,
-    ParamNode,
-    LayerNode,
-    SearchSpaceNode,
-    EvolutionNode,
-    ConstraintNode,
-    ExperimentNode,
-    ASTVisitor,
-)
-from morphml.core.dsl.compiler import Compiler, compile_dsl, compile_to_search_space
+from morphml.core.dsl.syntax import KEYWORDS, LAYER_TYPES, OPERATORS, TokenType
+from morphml.core.dsl.type_system import Type, TypeChecker, check_types
 from morphml.core.dsl.validator import Validator, validate_ast
-from morphml.core.dsl.type_system import TypeChecker, Type, check_types
 
 __all__ = [
     # Pythonic API

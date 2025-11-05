@@ -7,9 +7,9 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 """
 
 from morphml.meta_learning.knowledge_base.embedder import ArchitectureEmbedder
-from morphml.meta_learning.knowledge_base.vector_store import VectorStore
 from morphml.meta_learning.knowledge_base.knowledge_base import KnowledgeBase
 from morphml.meta_learning.knowledge_base.meta_features import MetaFeatureExtractor
+from morphml.meta_learning.knowledge_base.vector_store import VectorStore
 
 __all__ = [
     "ArchitectureEmbedder",

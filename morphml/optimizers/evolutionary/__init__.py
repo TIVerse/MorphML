@@ -14,7 +14,7 @@ Example:
     ...     config={'num_particles': 30, 'max_iterations': 100}
     ... )
     >>> best = optimizer.optimize(evaluator)
-    
+
     # Or use convenience function
     >>> best = optimize_with_pso(space, evaluator, num_particles=30)
 """

@@ -9,6 +9,7 @@ import pytest
 # Check if PyTorch and CUDA are available
 try:
     import torch
+
     TORCH_AVAILABLE = True
     CUDA_AVAILABLE = torch.cuda.is_available()
 except ImportError:
@@ -16,15 +17,9 @@ except ImportError:
     CUDA_AVAILABLE = False
 
 
-requires_torch = pytest.mark.skipif(
-    not TORCH_AVAILABLE,
-    reason="PyTorch not available"
-)
+requires_torch = pytest.mark.skipif(not TORCH_AVAILABLE, reason="PyTorch not available")
 
-requires_cuda = pytest.mark.skipif(
-    not CUDA_AVAILABLE,
-    reason="CUDA not available"
-)
+requires_cuda = pytest.mark.skipif(not CUDA_AVAILABLE, reason="CUDA not available")
 
 
 @requires_torch
@@ -44,10 +39,10 @@ class TestDARTSOptimizer:
 
         space = create_cnn_space(num_classes=10)
         config = {
-            'learning_rate_w': 0.025,
-            'learning_rate_alpha': 3e-4,
-            'num_nodes': 4,
-            'num_steps': 10
+            "learning_rate_w": 0.025,
+            "learning_rate_alpha": 3e-4,
+            "num_nodes": 4,
+            "num_steps": 10,
         }
 
         optimizer = DARTS(space, config)
@@ -67,9 +62,9 @@ class TestDARTSOptimizer:
 
         ops = optimizer._get_operation_set()
 
-        assert 'skip_connect' in ops
-        assert 'sep_conv_3x3' in ops
-        assert 'none' in ops
+        assert "skip_connect" in ops
+        assert "sep_conv_3x3" in ops
+        assert "none" in ops
         assert len(ops) > 0
 
     @requires_cuda
@@ -79,11 +74,11 @@ class TestDARTSOptimizer:
         from morphml.optimizers.gradient_based import DARTS
 
         space = create_cnn_space(num_classes=10)
-        optimizer = DARTS(space, {'num_steps': 5})
+        optimizer = DARTS(space, {"num_steps": 5})
 
         # Just check method exists
-        assert hasattr(optimizer, 'search')
-        assert hasattr(optimizer, 'derive_architecture')
+        assert hasattr(optimizer, "search")
+        assert hasattr(optimizer, "derive_architecture")
 
 
 @requires_torch
@@ -102,11 +97,7 @@ class TestENASOptimizer:
         from morphml.optimizers.gradient_based import ENAS
 
         space = create_cnn_space(num_classes=10)
-        config = {
-            'controller_lr': 3e-4,
-            'shared_lr': 0.05,
-            'num_layers': 12
-        }
+        config = {"controller_lr": 3e-4, "shared_lr": 0.05, "num_layers": 12}
 
         optimizer = ENAS(space, config)
 
@@ -125,9 +116,9 @@ class TestENASOptimizer:
 
         ops = optimizer._get_operation_set()
 
-        assert 'identity' in ops
-        assert 'sep_conv_3x3' in ops
-        assert 'none' in ops
+        assert "identity" in ops
+        assert "sep_conv_3x3" in ops
+        assert "none" in ops
         assert len(ops) > 0
 
     @requires_cuda
@@ -137,12 +128,12 @@ class TestENASOptimizer:
         from morphml.optimizers.gradient_based import ENAS
 
         space = create_cnn_space(num_classes=10)
-        optimizer = ENAS(space, {'num_layers': 6})
+        optimizer = ENAS(space, {"num_layers": 6})
 
         # Just check method exists
-        assert hasattr(optimizer, 'search')
-        assert hasattr(optimizer, 'train_shared_model')
-        assert hasattr(optimizer, 'train_controller')
+        assert hasattr(optimizer, "search")
+        assert hasattr(optimizer, "train_shared_model")
+        assert hasattr(optimizer, "train_controller")
 
 
 @requires_torch
@@ -152,9 +143,9 @@ class TestGradientBasedOperations:
     def test_import_operations(self):
         """Test that operations can be imported."""
         from morphml.optimizers.gradient_based.operations import (
-            SepConv,
             DilConv,
             Identity,
+            SepConv,
             Zero,
         )
 
@@ -164,5 +155,5 @@ class TestGradientBasedOperations:
         assert Zero is not None
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

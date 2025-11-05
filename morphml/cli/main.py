@@ -21,17 +21,17 @@ from morphml import __version__
 from morphml.evaluation import HeuristicEvaluator
 from morphml.logging_config import get_logger, setup_logging
 from morphml.optimizers import (
-    GeneticAlgorithm,
-    RandomSearch,
-    HillClimbing,
-    SimulatedAnnealing,
-    DifferentialEvolution,
-    GaussianProcessOptimizer,
-    TPEOptimizer,
-    SMACOptimizer,
-    NSGA2Optimizer,
     DARTS,
     ENAS,
+    DifferentialEvolution,
+    GaussianProcessOptimizer,
+    GeneticAlgorithm,
+    HillClimbing,
+    NSGA2Optimizer,
+    RandomSearch,
+    SimulatedAnnealing,
+    SMACOptimizer,
+    TPEOptimizer,
 )
 from morphml.utils import ArchitectureExporter, Checkpoint
 
@@ -65,7 +65,9 @@ def cli():
 )
 @click.option(
     "--optimizer",
-    type=click.Choice(["ga", "rs", "hc", "sa", "de", "gp", "tpe", "smac", "nsga2", "darts", "enas"]),
+    type=click.Choice(
+        ["ga", "rs", "hc", "sa", "de", "gp", "tpe", "smac", "nsga2", "darts", "enas"]
+    ),
     default="ga",
     help="Optimizer to use (ga=Genetic Algorithm, rs=Random Search, hc=Hill Climbing, "
     "sa=Simulated Annealing, de=Differential Evolution, gp=Gaussian Process, "
@@ -150,7 +152,7 @@ def run(
             # Optimize with callback
             def callback(generation, population):
                 progress.update(task, advance=1)
-                if hasattr(population, 'get_statistics'):
+                if hasattr(population, "get_statistics"):
                     stats = population.get_statistics()
                     progress.console.print(
                         f"  Gen {generation}: best={stats['best_fitness']:.4f}, "
@@ -183,12 +185,12 @@ def run(
 
 def _create_optimizer(optimizer_name: str, search_space, config: dict):
     """Factory function to create optimizer instances.
-    
+
     Args:
         optimizer_name: Short name of optimizer (ga, rs, hc, etc.)
         search_space: SearchSpace to optimize
         config: Configuration dict from experiment file
-        
+
     Returns:
         Optimizer instance
     """
@@ -203,36 +205,40 @@ def _create_optimizer(optimizer_name: str, search_space, config: dict):
         "smac": SMACOptimizer,
         "nsga2": NSGA2Optimizer,
     }
-    
+
     # GPU-dependent optimizers
     if optimizer_name == "darts":
         if DARTS is None:
-            console.print("[red]Error:[/red] DARTS requires PyTorch. Install with: pip install 'morphml[gpu]'")
+            console.print(
+                "[red]Error:[/red] DARTS requires PyTorch. Install with: pip install 'morphml[gpu]'"
+            )
             sys.exit(1)
         console.print("[yellow]Warning:[/yellow] DARTS requires GPU for optimal performance")
         return DARTS(search_space, config)
-    
+
     if optimizer_name == "enas":
         if ENAS is None:
-            console.print("[red]Error:[/red] ENAS requires PyTorch. Install with: pip install 'morphml[gpu]'")
+            console.print(
+                "[red]Error:[/red] ENAS requires PyTorch. Install with: pip install 'morphml[gpu]'"
+            )
             sys.exit(1)
         console.print("[yellow]Warning:[/yellow] ENAS requires GPU for optimal performance")
         return ENAS(search_space, config)
-    
+
     # Standard optimizers
     optimizer_class = optimizer_map.get(optimizer_name)
     if optimizer_class is None:
         console.print(f"[red]Error:[/red] Unknown optimizer: {optimizer_name}")
         sys.exit(1)
-    
+
     # Bayesian optimizers use different config structure
     if optimizer_name in ["gp", "tpe", "smac"]:
         return optimizer_class(search_space, config=config)
-    
+
     # NSGA2 uses different config structure
     if optimizer_name == "nsga2":
         return optimizer_class(search_space, config=config)
-    
+
     # Phase 1 optimizers use **kwargs
     return optimizer_class(search_space, **config)
 
@@ -265,7 +271,7 @@ def _save_results(best, optimizer, output_path: Path, export_format: str):
         console.print(f"  ✓ Keras export: [yellow]{keras_path}[/yellow]")
 
     # Save history if available
-    if hasattr(optimizer, 'get_history'):
+    if hasattr(optimizer, "get_history"):
         history = optimizer.get_history()
         history_path = output_path / "history.json"
         with open(history_path, "w") as f:
@@ -274,15 +280,15 @@ def _save_results(best, optimizer, output_path: Path, export_format: str):
 
     # Save summary
     summary = {
-        "best_fitness": best.fitness if hasattr(best, 'fitness') else str(best),
+        "best_fitness": best.fitness if hasattr(best, "fitness") else str(best),
     }
-    
+
     # Add population stats if available
-    if hasattr(optimizer, 'population'):
+    if hasattr(optimizer, "population"):
         summary["final_generation"] = optimizer.population.generation
         summary["population_size"] = optimizer.population.size()
         summary["statistics"] = optimizer.population.get_statistics()
-    
+
     summary_path = output_path / "summary.json"
     with open(summary_path, "w") as f:
         json.dump(summary, f, indent=2)
@@ -296,10 +302,10 @@ def _display_results_summary(best, optimizer, output_path: Path):
     table.add_column("Value", style="green", width=20)
 
     # Add fitness
-    table.add_row("Best Fitness", f"{best.fitness:.6f}" if hasattr(best, 'fitness') else str(best))
-    
+    table.add_row("Best Fitness", f"{best.fitness:.6f}" if hasattr(best, "fitness") else str(best))
+
     # Add population stats if available
-    if hasattr(optimizer, 'population'):
+    if hasattr(optimizer, "population"):
         stats = optimizer.population.get_statistics()
         table.add_row("Mean Fitness", f"{stats['mean_fitness']:.6f}")
         table.add_row("Final Generation", str(optimizer.population.generation))

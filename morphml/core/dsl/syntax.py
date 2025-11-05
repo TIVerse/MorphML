@@ -18,7 +18,6 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 """
 
 from enum import Enum, auto
-from typing import List
 
 
 class TokenType(Enum):
@@ -191,7 +190,7 @@ Examples:
             Layer.dense(units=[128, 256])
         ]
     )
-    
+
     Evolution(
         strategy="genetic",
         population_size=50,

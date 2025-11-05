@@ -9,7 +9,7 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from morphml.core.dsl.syntax import LAYER_TYPES, EVOLUTION_STRATEGIES
+from morphml.core.dsl.syntax import EVOLUTION_STRATEGIES, LAYER_TYPES
 from morphml.exceptions import ValidationError
 
 
