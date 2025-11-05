@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "morphml.fullname" . }}-master
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+    app.kubernetes.io/component: master
+spec:
+  type: {{ .Values.master.service.type }}
+  ports:
+  - port: {{ .Values.master.service.port }}
+    targetPort: grpc
+    protocol: TCP
+    name: grpc
+  - port: {{ .Values.master.service.metricsPort }}
+    targetPort: metrics
+    protocol: TCP
+    name: metrics
+  selector:
+    {{- include "morphml.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "morphml.fullname" . }}-master-headless
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+    app.kubernetes.io/component: master
+spec:
+  clusterIP: None
+  ports:
+  - port: {{ .Values.master.service.port }}
+    targetPort: grpc
+    protocol: TCP
+    name: grpc
+  selector:
+    {{- include "morphml.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: master

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "morphml.fullname" . }}-config
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+data:
+  morphml.yaml: |
+    # MorphML Configuration
+    master:
+      host: {{ include "morphml.fullname" . }}-master
+      port: {{ .Values.master.service.port }}
+      metrics_port: {{ .Values.master.service.metricsPort }}
+    
+    worker:
+      heartbeat_interval: 10
+      max_retries: 3
+      timeout: 300
+    
+    storage:
+      postgres:
+        host: {{ include "morphml.postgresql.fullname" . }}
+        port: 5432
+        database: {{ .Values.postgresql.auth.database }}
+      
+      redis:
+        host: {{ include "morphml.redis.fullname" . }}-master
+        port: 6379
+      
+      minio:
+        endpoint: {{ include "morphml.minio.fullname" . }}:9000
+        bucket: morphml-artifacts
+        secure: false
+    
+    logging:
+      level: INFO
+      format: json
+    
+    execution:
+      max_workers: {{ .Values.worker.replicas }}
+      task_timeout: 3600
+      checkpoint_interval: 300
+    
+    scheduling:
+      strategy: load_balancing
+      enable_work_stealing: true
+      enable_adaptive: true
+    
+    fault_tolerance:
+      enable_checkpointing: true
+      enable_retry: true
+      max_retries: 3
+      retry_delay: 10
