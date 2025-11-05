@@ -1,0 +1,37 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "morphml.fullname" . }}-master
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+    app.kubernetes.io/component: master
+spec:
+  selector:
+    matchLabels:
+      {{- include "morphml.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: master
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "morphml.fullname" . }}-worker
+  labels:
+    {{- include "morphml.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  selector:
+    matchLabels:
+      {{- include "morphml.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+{{- end }}
