@@ -1,0 +1,43 @@
+# Dockerfile for MorphML Master Node
+# Author: Eshan Roy <eshanized@proton.me>
+# Organization: TONMOY INFRASTRUCTURE & VISION
+
+FROM python:3.10-slim
+
+LABEL maintainer="Eshan Roy <eshanized@proton.me>"
+LABEL description="MorphML Master Node for distributed Neural Architecture Search"
+LABEL version="1.0.0"
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY pyproject.toml poetry.lock ./
+
+# Install Python dependencies
+RUN pip install --no-cache-dir poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-dev --extras "distributed storage"
+
+# Copy source code
+COPY morphml/ ./morphml/
+COPY README.md LICENSE ./
+
+# Create directories for logs and data
+RUN mkdir -p /app/logs /app/data
+
+# Expose gRPC port
+EXPOSE 50051
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import socket; s=socket.socket(); s.connect(('localhost', 50051)); s.close()"
+
+# Run master node
+ENV PYTHONUNBUFFERED=1
+CMD ["python", "-m", "morphml.distributed.master_server"]

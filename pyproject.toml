@@ -29,6 +29,31 @@ pyyaml = "^6.0"
 tqdm = "^4.65.0"
 matplotlib = "^3.7.0"
 seaborn = "^0.12.0"
+# Phase 2: Bayesian Optimization
+scikit-optimize = "^0.9.0"
+gpytorch = { version = "^1.11", optional = true }
+botorch = { version = "^0.9.0", optional = true }
+# Phase 2: Gradient-Based NAS
+torch = { version = "^2.0.0", optional = true }
+# Phase 2: Multi-Objective
+pymoo = "^0.6.0"
+# Phase 2: Benchmarking
+openml = "^0.14.0"
+scikit-learn = "^1.3.0"
+plotly = "^5.14.0"
+# Phase 2: Advanced Evolutionary
+cma = { version = "^3.3.0", optional = true }
+# Phase 3: Distributed Execution
+grpcio = { version = "^1.54.0", optional = true }
+grpcio-tools = { version = "^1.54.0", optional = true }
+protobuf = { version = "^4.23.0", optional = true }
+pyzmq = { version = "^25.0.0", optional = true }
+psutil = "^5.9.0"
+# Phase 3: Distributed Storage
+sqlalchemy = { version = "^2.0.0", optional = true }
+psycopg2-binary = { version = "^2.9.0", optional = true }
+redis = { version = "^4.5.0", optional = true }
+boto3 = { version = "^1.26.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.0"
@@ -42,6 +67,16 @@ jupyter = "^1.0.0"
 
 [tool.poetry.scripts]
 morphml = "morphml.cli.main:cli"
+
+[tool.poetry.extras]
+bayesian = ["gpytorch", "botorch"]
+gradient = ["torch"]
+advanced = ["cma"]
+distributed = ["grpcio", "grpcio-tools", "protobuf"]
+messaging = ["pyzmq"]
+storage = ["sqlalchemy", "psycopg2-binary", "redis", "boto3"]
+gpu = ["torch", "gpytorch", "botorch"]
+all = ["gpytorch", "botorch", "torch", "cma", "grpcio", "grpcio-tools", "protobuf", "pyzmq", "sqlalchemy", "psycopg2-binary", "redis", "boto3"]
 
 [build-system]
 requires = ["poetry-core"]
@@ -100,6 +135,19 @@ module = [
     "scipy.*",
     "matplotlib.*",
     "seaborn.*",
+    "skopt.*",
+    "gpytorch.*",
+    "botorch.*",
+    "torch.*",
+    "pymoo.*",
+    "openml.*",
+    "sklearn.*",
+    "plotly.*",
+    "cma.*",
+    "grpc.*",
+    "google.protobuf.*",
+    "psutil.*",
+    "pynvml.*",
 ]
 ignore_missing_imports = true
 

@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package morphml.distributed;
+
+// Master service - called by workers
+service MasterService {
+    // Register a new worker with the master
+    rpc RegisterWorker(RegisterRequest) returns (RegisterResponse);
+    
+    // Send periodic heartbeat
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+    
+    // Submit evaluation result
+    rpc SubmitResult(ResultRequest) returns (ResultResponse);
+    
+    // Request a task (pull model)
+    rpc RequestTask(TaskRequest) returns (TaskResponse);
+}
+
+// Worker service - called by master
+service WorkerService {
+    // Evaluate an architecture (push model)
+    rpc Evaluate(EvaluateRequest) returns (EvaluateResponse);
+    
+    // Get worker status
+    rpc GetStatus(StatusRequest) returns (StatusResponse);
+    
+    // Shutdown worker gracefully
+    rpc Shutdown(ShutdownRequest) returns (ShutdownResponse);
+    
+    // Cancel running task
+    rpc CancelTask(CancelRequest) returns (CancelResponse);
+}
+
+// ====================
+// Registration
+// ====================
+
+message RegisterRequest {
+    string worker_id = 1;
+    string host = 2;
+    int32 port = 3;
+    int32 num_gpus = 4;
+    repeated int32 gpu_ids = 5;
+    map<string, string> metadata = 6;
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+    string master_id = 3;
+}
+
+// ====================
+// Heartbeat
+// ====================
+
+message HeartbeatRequest {
+    string worker_id = 1;
+    string status = 2;  // 'idle', 'busy', 'error'
+    string current_task_id = 3;
+    WorkerMetrics metrics = 4;
+}
+
+message HeartbeatResponse {
+    bool acknowledged = 1;
+    bool should_continue = 2;  // false = shutdown
+}
+
+message WorkerMetrics {
+    double cpu_usage = 1;
+    double memory_usage = 2;
+    double gpu_usage = 3;
+    double gpu_memory = 4;
+    int32 tasks_completed = 5;
+    int32 tasks_failed = 6;
+}
+
+// ====================
+// Task Evaluation
+// ====================
+
+message EvaluateRequest {
+    string task_id = 1;
+    string architecture = 2;  // JSON serialized ModelGraph
+    EvaluationConfig config = 3;
+}
+
+message EvaluateResponse {
+    string task_id = 1;
+    bool success = 2;
+    map<string, double> metrics = 3;
+    string error = 4;
+    double duration = 5;
+}
+
+message EvaluationConfig {
+    int32 num_epochs = 1;
+    int32 batch_size = 2;
+    double learning_rate = 3;
+    string dataset = 4;
+    int32 gpu_id = 5;
+    map<string, string> extra = 6;
+}
+
+// ====================
+// Task Request (Pull Model)
+// ====================
+
+message TaskRequest {
+    string worker_id = 1;
+    int32 max_tasks = 2;  // Number of tasks to request
+}
+
+message TaskResponse {
+    bool has_task = 1;
+    repeated EvaluateRequest tasks = 2;
+}
+
+// ====================
+// Result Submission
+// ====================
+
+message ResultRequest {
+    string task_id = 1;
+    string worker_id = 2;
+    bool success = 3;
+    map<string, double> metrics = 4;
+    string error = 5;
+    double duration = 6;
+    string architecture = 7;  // Optional: return modified architecture
+}
+
+message ResultResponse {
+    bool acknowledged = 1;
+    string message = 2;
+}
+
+// ====================
+// Status & Control
+// ====================
+
+message StatusRequest {
+    string worker_id = 1;
+}
+
+message StatusResponse {
+    string status = 1;  // 'idle', 'busy', 'error', 'dead'
+    string current_task_id = 2;
+    WorkerMetrics metrics = 3;
+    int64 uptime_seconds = 4;
+}
+
+message ShutdownRequest {
+    string worker_id = 1;
+    bool graceful = 2;  // Wait for current task to finish
+}
+
+message ShutdownResponse {
+    bool acknowledged = 1;
+}
+
+message CancelRequest {
+    string task_id = 1;
+}
+
+message CancelResponse {
+    bool success = 1;
+    string message = 2;
+}

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: morphml
+  labels:
+    name: morphml
+    app: morphml

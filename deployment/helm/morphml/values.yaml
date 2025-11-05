@@ -1,0 +1,133 @@
+# Default values for MorphML Helm chart
+# Author: Eshan Roy <eshanized@proton.me>
+
+# Master node configuration
+master:
+  image:
+    repository: tiverse/morphml-master
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  replicas: 1
+  
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "2"
+    limits:
+      memory: "8Gi"
+      cpu: "4"
+  
+  service:
+    type: ClusterIP
+    port: 50051
+    metricsPort: 8000
+  
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 10Gi
+
+# Worker node configuration
+worker:
+  image:
+    repository: tiverse/morphml-worker
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  replicas: 4
+  
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "4"
+      nvidia.com/gpu: 1
+    limits:
+      memory: "16Gi"
+      cpu: "8"
+      nvidia.com/gpu: 1
+  
+  nodeSelector:
+    accelerator: nvidia-gpu
+  
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+  
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 50
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 85
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    database: morphml
+    username: morphml
+    password: changeme
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: changeme
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+
+# MinIO (S3-compatible) configuration
+minio:
+  enabled: true
+  auth:
+    rootUser: minioadmin
+    rootPassword: changeme
+  defaultBuckets: "morphml-artifacts"
+  persistence:
+    enabled: true
+    size: 100Gi
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+
+# Monitoring configuration
+monitoring:
+  prometheus:
+    enabled: false
+  grafana:
+    enabled: false
+
+# Global configuration
+global:
+  storageClass: ""
+
+# Image pull secrets (if using private registry)
+imagePullSecrets: []
+
+# Service account
+serviceAccount:
+  create: true
+  name: morphml
+  annotations: {}
+
+# RBAC
+rbac:
+  create: true

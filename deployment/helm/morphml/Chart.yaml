@@ -1,0 +1,40 @@
+apiVersion: v2
+name: morphml
+description: A Helm chart for MorphML distributed Neural Architecture Search
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+keywords:
+  - machine-learning
+  - neural-architecture-search
+  - distributed-computing
+  - automl
+  - nas
+
+home: https://github.com/TIVerse/MorphML
+sources:
+  - https://github.com/TIVerse/MorphML
+
+maintainers:
+  - name: Eshan Roy
+    email: eshanized@proton.me
+    url: https://github.com/TIVerse
+
+icon: https://raw.githubusercontent.com/TIVerse/MorphML/main/docs/logo.png
+
+dependencies:
+  - name: postgresql
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  
+  - name: redis
+    version: "17.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  
+  - name: minio
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: minio.enabled

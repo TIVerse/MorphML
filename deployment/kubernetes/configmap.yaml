@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: morphml-config
+  namespace: morphml
+data:
+  # PostgreSQL configuration
+  postgres_host: "postgres.morphml.svc.cluster.local"
+  postgres_port: "5432"
+  postgres_db: "morphml"
+  
+  # Redis configuration
+  redis_host: "redis.morphml.svc.cluster.local"
+  redis_port: "6379"
+  
+  # S3/MinIO configuration
+  s3_endpoint: "http://minio.morphml.svc.cluster.local:9000"
+  s3_bucket: "morphml-artifacts"
+  
+  # Master configuration
+  master_host: "morphml-master.morphml.svc.cluster.local"
+  master_port: "50051"
+  
+  # Search configuration
+  population_size: "50"
+  num_generations: "100"
+  checkpoint_interval: "10"
