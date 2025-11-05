@@ -1,0 +1,106 @@
+# Prometheus configuration for MorphML monitoring
+# Author: Eshan Roy <eshanized@proton.me>
+
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+  external_labels:
+    cluster: 'morphml'
+    environment: 'production'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - alertmanager:9093
+
+# Rule files
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+# Scrape configurations
+scrape_configs:
+  # Master node metrics
+  - job_name: 'morphml-master'
+    kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        names:
+        - morphml
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
+      action: keep
+      regex: master
+    - source_labels: [__meta_kubernetes_pod_name]
+      target_label: pod
+    - source_labels: [__meta_kubernetes_namespace]
+      target_label: namespace
+    metric_relabel_configs:
+    - source_labels: [__name__]
+      regex: 'morphml_.*'
+      action: keep
+
+  # Worker node metrics
+  - job_name: 'morphml-worker'
+    kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        names:
+        - morphml
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
+      action: keep
+      regex: worker
+    - source_labels: [__meta_kubernetes_pod_name]
+      target_label: pod
+    - source_labels: [__meta_kubernetes_namespace]
+      target_label: namespace
+    metric_relabel_configs:
+    - source_labels: [__name__]
+      regex: 'morphml_.*'
+      action: keep
+
+  # PostgreSQL metrics
+  - job_name: 'postgresql'
+    static_configs:
+    - targets:
+      - postgresql-exporter:9187
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+    - targets:
+      - redis-exporter:9121
+
+  # MinIO metrics
+  - job_name: 'minio'
+    static_configs:
+    - targets:
+      - minio:9000
+    metrics_path: /minio/v2/metrics/cluster
+
+  # Kubernetes API server
+  - job_name: 'kubernetes-apiservers'
+    kubernetes_sd_configs:
+    - role: endpoints
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+      action: keep
+      regex: default;kubernetes;https
+
+  # Node metrics
+  - job_name: 'kubernetes-nodes'
+    kubernetes_sd_configs:
+    - role: node
+    scheme: https
+    tls_config:
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)

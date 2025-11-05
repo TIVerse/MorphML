@@ -1,0 +1,133 @@
+{
+  "dashboard": {
+    "title": "MorphML - Neural Architecture Search",
+    "tags": ["morphml", "nas", "ml"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Active Workers",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(up{job=\"morphml-worker\"} == 1)",
+            "legendFormat": "Active Workers"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4}
+      },
+      {
+        "title": "Tasks Completed (Total)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(morphml_tasks_completed_total)",
+            "legendFormat": "Completed"
+          }
+        ],
+        "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4}
+      },
+      {
+        "title": "Tasks Failed (Total)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(morphml_tasks_failed_total)",
+            "legendFormat": "Failed"
+          }
+        ],
+        "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4}
+      },
+      {
+        "title": "Average Task Duration",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(morphml_task_duration_seconds)",
+            "legendFormat": "Avg Duration (s)"
+          }
+        ],
+        "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4}
+      },
+      {
+        "title": "Task Throughput",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(morphml_tasks_completed_total[5m])",
+            "legendFormat": "Tasks/sec"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8}
+      },
+      {
+        "title": "Worker CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "morphml_worker_cpu_percent",
+            "legendFormat": "{{pod}}"
+          }
+        ],
+        "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8}
+      },
+      {
+        "title": "Worker Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "morphml_worker_memory_percent",
+            "legendFormat": "{{pod}}"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8}
+      },
+      {
+        "title": "GPU Utilization",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "morphml_worker_gpu_percent",
+            "legendFormat": "{{pod}}"
+          }
+        ],
+        "gridPos": {"x": 12, "y": 12, "w": 12, "h": 8}
+      },
+      {
+        "title": "Best Fitness Over Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "morphml_best_fitness",
+            "legendFormat": "Best Fitness"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 20, "w": 24, "h": 8}
+      },
+      {
+        "title": "Queue Depth",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "morphml_task_queue_depth",
+            "legendFormat": "Pending Tasks"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 28, "w": 12, "h": 8}
+      },
+      {
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(morphml_tasks_failed_total[5m]) / rate(morphml_tasks_completed_total[5m])",
+            "legendFormat": "Error Rate"
+          }
+        ],
+        "gridPos": {"x": 12, "y": 28, "w": 12, "h": 8}
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 30,
+    "version": 1
+  }
+}
