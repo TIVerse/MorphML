@@ -1,0 +1,435 @@
+# MorphML Large Cluster Configuration (50+ Workers)
+# Optimized Helm values for empirical validation and production deployment
+#
+# Usage:
+#   helm install morphml ./deployment/helm/morphml \
+#     --namespace morphml-large \
+#     --create-namespace \
+#     --values deployment/kubernetes/large-cluster-values.yaml
+
+# Global configuration
+global:
+  clusterName: "morphml-large"
+  environment: "validation"
+  
+# Master node configuration
+master:
+  replicaCount: 2  # High availability with 2 masters
+  
+  image:
+    repository: tiverse/morphml-master
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "4"
+    limits:
+      memory: "16Gi"
+      cpu: "8"
+  
+  # Master configuration
+  config:
+    port: 50051
+    heartbeat_interval: 10
+    task_timeout: 7200  # 2 hours for complex architectures
+    max_retries: 5
+    log_level: "INFO"
+    
+    # Large cluster optimizations
+    max_concurrent_tasks: 100
+    worker_connection_timeout: 30
+    enable_task_batching: true
+    batch_size: 50
+    
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 50051
+    targetPort: 50051
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8080"
+      prometheus.io/path: "/metrics"
+  
+  # Affinity rules for master high availability
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: component
+                operator: In
+                values:
+                  - master
+          topologyKey: "kubernetes.io/hostname"
+
+# Worker node configuration for large-scale deployment
+worker:
+  # Base replica count (will be scaled by HPA)
+  replicaCount: 50
+  
+  image:
+    repository: tiverse/morphml-worker
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  # Resource requests optimized for GPU nodes
+  resources:
+    requests:
+      memory: "16Gi"
+      cpu: "8"
+      nvidia.com/gpu: 1
+    limits:
+      memory: "32Gi"
+      cpu: "16"
+      nvidia.com/gpu: 1
+  
+  # Worker configuration
+  config:
+    master_host: "morphml-master"
+    master_port: 50051
+    heartbeat_interval: 5  # More frequent for large clusters
+    log_level: "INFO"
+    
+    # GPU configuration
+    gpu_memory_fraction: 0.9
+    enable_mixed_precision: true
+    
+    # Task processing
+    max_concurrent_evaluations: 2  # Per worker
+    evaluation_timeout: 3600
+    
+  # Node selector for GPU nodes
+  nodeSelector:
+    node.kubernetes.io/instance-type: "n1-standard-16"  # GKE example
+    cloud.google.com/gke-accelerator: "nvidia-tesla-t4"
+  
+  # Tolerations for GPU nodes
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+  
+  # Pod disruption budget for resilience
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 40  # Keep at least 80% workers running
+  
+  # Horizontal Pod Autoscaler for dynamic scaling
+  autoscaling:
+    enabled: true
+    minReplicas: 50
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 80
+    
+    # Custom metrics for task-based scaling
+    metrics:
+      - type: Pods
+        pods:
+          metric:
+            name: tasks_pending
+          target:
+            type: AverageValue
+            averageValue: "10"
+  
+  # Readiness and liveness probes
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+  
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+# PostgreSQL configuration for large cluster
+postgresql:
+  enabled: true
+  
+  auth:
+    username: morphml
+    password: "change-me-in-production"
+    database: morphml
+  
+  primary:
+    persistence:
+      enabled: true
+      size: 200Gi  # Increased for large-scale experiments
+      storageClass: "fast-ssd"  # Use SSD storage
+    
+    resources:
+      requests:
+        memory: "16Gi"
+        cpu: "4"
+      limits:
+        memory: "32Gi"
+        cpu: "8"
+    
+    # PostgreSQL tuning for high load
+    extendedConfiguration: |
+      max_connections = 500
+      shared_buffers = 8GB
+      effective_cache_size = 24GB
+      maintenance_work_mem = 2GB
+      checkpoint_completion_target = 0.9
+      wal_buffers = 16MB
+      default_statistics_target = 100
+      random_page_cost = 1.1
+      effective_io_concurrency = 200
+      work_mem = 32MB
+      min_wal_size = 2GB
+      max_wal_size = 8GB
+      max_worker_processes = 8
+      max_parallel_workers_per_gather = 4
+      max_parallel_workers = 8
+
+# Redis configuration for distributed cache
+redis:
+  enabled: true
+  
+  architecture: replication
+  auth:
+    enabled: true
+    password: "change-me-in-production"
+  
+  master:
+    persistence:
+      enabled: true
+      size: 50Gi
+      storageClass: "fast-ssd"
+    
+    resources:
+      requests:
+        memory: "8Gi"
+        cpu: "2"
+      limits:
+        memory: "16Gi"
+        cpu: "4"
+  
+  replica:
+    replicaCount: 2
+    persistence:
+      enabled: true
+      size: 50Gi
+    
+    resources:
+      requests:
+        memory: "8Gi"
+        cpu: "2"
+      limits:
+        memory: "16Gi"
+        cpu: "4"
+  
+  # Redis tuning
+  commonConfiguration: |-
+    maxmemory 14gb
+    maxmemory-policy allkeys-lru
+    save ""
+    appendonly no
+    tcp-backlog 511
+    timeout 300
+
+# MinIO configuration for object storage
+minio:
+  enabled: true
+  
+  mode: distributed
+  replicas: 4
+  
+  auth:
+    rootUser: minioadmin
+    rootPassword: "change-me-in-production"
+  
+  persistence:
+    enabled: true
+    size: 500Gi  # Large storage for architectures and results
+    storageClass: "standard"
+  
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "2"
+    limits:
+      memory: "8Gi"
+      cpu: "4"
+  
+  # Create default bucket
+  defaultBuckets: "morphml-artifacts,morphml-checkpoints,morphml-results"
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  
+  prometheus:
+    enabled: true
+    retention: 30d
+    storageSize: 100Gi
+    
+    resources:
+      requests:
+        memory: "8Gi"
+        cpu: "2"
+      limits:
+        memory: "16Gi"
+        cpu: "4"
+    
+    # Scrape configuration for large cluster
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+    
+  grafana:
+    enabled: true
+    adminPassword: "change-me-in-production"
+    
+    persistence:
+      enabled: true
+      size: 10Gi
+    
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+    
+    # Pre-configured dashboards
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: 'default'
+            orgId: 1
+            folder: 'MorphML'
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+
+# Network policies for security
+networkPolicies:
+  enabled: true
+  
+  # Allow workers to connect to master
+  allowWorkerToMaster: true
+  
+  # Allow master to connect to databases
+  allowMasterToDatabase: true
+  
+  # Deny all other traffic by default
+  policyTypes:
+    - Ingress
+    - Egress
+
+# Resource quotas for namespace
+resourceQuota:
+  enabled: true
+  hard:
+    requests.cpu: "500"
+    requests.memory: "2000Gi"
+    requests.nvidia.com/gpu: "100"
+    persistentvolumeclaims: "50"
+    services: "20"
+
+# Priority classes for pod scheduling
+priorityClass:
+  master:
+    value: 1000000
+    description: "High priority for master nodes"
+  
+  worker:
+    value: 100000
+    description: "Medium priority for worker nodes"
+  
+  database:
+    value: 500000
+    description: "High priority for database services"
+
+# Service accounts and RBAC
+serviceAccount:
+  create: true
+  name: "morphml-sa"
+  annotations: {}
+  
+rbac:
+  create: true
+  rules:
+    - apiGroups: [""]
+      resources: ["pods", "services", "endpoints"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["apps"]
+      resources: ["deployments", "replicasets"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["autoscaling"]
+      resources: ["horizontalpodautoscalers"]
+      verbs: ["get", "list", "watch", "update", "patch"]
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: 30  # Keep 30 days of backups
+  
+  # PostgreSQL backup
+  postgresql:
+    enabled: true
+    destination: "s3://morphml-backups/postgresql"
+  
+  # MinIO backup
+  minio:
+    enabled: true
+    destination: "s3://morphml-backups/minio"
+
+# Cost optimization features
+costOptimization:
+  # Use spot/preemptible instances for workers
+  useSpotInstances: true
+  spotInstanceMaxPrice: "0.50"  # USD per hour
+  
+  # Scale down during off-hours
+  scheduleScaling:
+    enabled: true
+    downscale:
+      schedule: "0 22 * * *"  # 10 PM
+      replicas: 10
+    upscale:
+      schedule: "0 8 * * *"  # 8 AM
+      replicas: 50
+  
+  # Cluster autoscaler hints
+  clusterAutoscaler:
+    enabled: true
+    minNodes: 10
+    maxNodes: 25
+
+# Validation-specific settings
+validation:
+  # Enable detailed logging for validation
+  verboseLogging: true
+  
+  # Metrics export for analysis
+  metricsExport:
+    enabled: true
+    format: "prometheus"
+    interval: 10s
+  
+  # Test data generation
+  syntheticLoad:
+    enabled: true
+    tasksPerMinute: 100
+    architectureComplexity: "high"
