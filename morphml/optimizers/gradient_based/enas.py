@@ -27,7 +27,7 @@ TODO [GPU Required]:
 - Test on CIFAR-10 and Penn TreeBank
 """
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -44,6 +44,12 @@ try:
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
+    
+    # Create dummy torch for type hints
+    if TYPE_CHECKING:
+        import torch
+    else:
+        torch = Any  # type: ignore
 
     class nn:
         class Module:
@@ -475,7 +481,7 @@ class ENASController(nn.Module if TORCH_AVAILABLE else object):
         # - Operation prediction heads
         # - Embedding layers
 
-    def sample(self) -> Tuple[List[int], torch.Tensor, torch.Tensor]:
+    def sample(self) -> Tuple[List[int], "torch.Tensor", "torch.Tensor"]:
         """
         Sample an architecture from the controller.
 

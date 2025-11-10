@@ -107,6 +107,9 @@ class ArchitectureExporter:
             elif op == "batchnorm":
                 code.append(f"        self.{layer_name} = nn.BatchNorm2d(num_features=?)")
 
+            elif op == "flatten":
+                code.append(f"        self.{layer_name} = nn.Flatten()")
+
             elif op in ["relu", "sigmoid", "tanh", "softmax"]:
                 # Functional, no layer definition needed
                 pass
@@ -216,6 +219,8 @@ class ArchitectureExporter:
                 code.append(f"    x = layers.Dropout({rate})(x)")
             elif op == "batchnorm":
                 code.append("    x = layers.BatchNormalization()(x)")
+            elif op == "flatten":
+                code.append("    x = layers.Flatten()(x)")
             elif op == "relu":
                 code.append("    x = layers.Activation('relu')(x)")
             elif op == "sigmoid":

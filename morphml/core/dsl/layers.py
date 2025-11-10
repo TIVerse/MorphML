@@ -270,6 +270,22 @@ class Layer:
         return LayerSpec("batchnorm", param_ranges=kwargs)
 
     @staticmethod
+    def flatten(**kwargs: Any) -> LayerSpec:
+        """
+        Define a flatten layer.
+        
+        Flattens the input tensor to 1D (excluding batch dimension).
+        Commonly used between convolutional and dense layers.
+        
+        Args:
+            **kwargs: Additional parameters
+            
+        Returns:
+            LayerSpec for flatten layer
+        """
+        return LayerSpec("flatten", param_ranges=kwargs)
+
+    @staticmethod
     def relu(**kwargs: Any) -> LayerSpec:
         """Define a ReLU activation layer."""
         return LayerSpec("relu", param_ranges=kwargs)
