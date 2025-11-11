@@ -219,6 +219,6 @@ Recommended versions:
 
 ---
 
-**Author:** Eshan Roy <eshanized@proton.me>  
+**Authors:** Vedanth ([@vedanthq](https://github.com/vedanthq)) & Eshan Roy ([@eshanized](https://github.com/eshanized))  
 **Organization:** TONMOY INFRASTRUCTURE & VISION  
 **Auto-generated:** Do not edit `*_pb2.py` files manually
