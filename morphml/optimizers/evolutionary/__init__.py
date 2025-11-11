@@ -36,6 +36,10 @@ from morphml.optimizers.evolutionary.particle_swarm import (
     optimize_with_pso,
 )
 
+# Aliases for backward compatibility
+CMAESOptimizer = CMAES
+DifferentialEvolutionOptimizer = DifferentialEvolution
+
 __all__ = [
     # Encoding utilities
     "ArchitectureEncoder",
@@ -48,8 +52,10 @@ __all__ = [
     "optimize_with_pso",
     # Differential Evolution
     "DifferentialEvolution",
+    "DifferentialEvolutionOptimizer",  # Alias
     "optimize_with_de",
     # CMA-ES
     "CMAES",
+    "CMAESOptimizer",  # Alias
     "optimize_with_cmaes",
 ]

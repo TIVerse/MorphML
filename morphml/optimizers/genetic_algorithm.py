@@ -219,8 +219,7 @@ class GeneticAlgorithm:
         """
         Perform crossover between two parents.
 
-        Currently uses single-parent cloning. Can be extended to
-        implement actual graph crossover.
+        Uses single-point crossover to combine parent graphs.
 
         Args:
             parent1: First parent
@@ -229,13 +228,19 @@ class GeneticAlgorithm:
         Returns:
             Offspring individual
         """
-        # Simple implementation: clone one parent
-        # TODO: Implement actual graph crossover
+        from morphml.core.graph.mutations import crossover as graph_crossover
         import random
 
-        parent = random.choice([parent1, parent2])
-        offspring = parent.clone(keep_fitness=False)
+        # Perform graph crossover
+        offspring_graph1, offspring_graph2 = graph_crossover(parent1.graph, parent2.graph)
+        
+        # Randomly select one of the two offspring
+        selected_graph = random.choice([offspring_graph1, offspring_graph2])
+        
+        # Create new individual
+        offspring = Individual(selected_graph)
         offspring.parent_ids = [parent1.id, parent2.id]
+        offspring.metadata["crossover"] = "single_point"
 
         return offspring
 
