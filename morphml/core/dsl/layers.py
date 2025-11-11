@@ -273,13 +273,13 @@ class Layer:
     def flatten(**kwargs: Any) -> LayerSpec:
         """
         Define a flatten layer.
-        
+
         Flattens the input tensor to 1D (excluding batch dimension).
         Commonly used between convolutional and dense layers.
-        
+
         Args:
             **kwargs: Additional parameters
-            
+
         Returns:
             LayerSpec for flatten layer
         """

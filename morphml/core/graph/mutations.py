@@ -342,7 +342,7 @@ def crossover(parent1: ModelGraph, parent2: ModelGraph) -> tuple[ModelGraph, Mod
         and combining their subgraphs.
     """
     import random
-    
+
     # Get topologically sorted nodes from both parents
     try:
         nodes1 = parent1.topological_sort()
@@ -350,60 +350,60 @@ def crossover(parent1: ModelGraph, parent2: ModelGraph) -> tuple[ModelGraph, Mod
     except Exception as e:
         logger.warning(f"Crossover failed during topological sort: {e}, returning clones")
         return parent1.clone(), parent2.clone()
-    
+
     # If either parent is too small, just return clones
     if len(nodes1) < 3 or len(nodes2) < 3:
         logger.debug("Parents too small for crossover, returning clones")
         return parent1.clone(), parent2.clone()
-    
+
     # Choose crossover points (excluding input/output nodes)
     point1 = random.randint(1, len(nodes1) - 2)
     point2 = random.randint(1, len(nodes2) - 2)
-    
+
     # Create offspring by combining subgraphs
     offspring1 = ModelGraph(metadata={"crossover": "parent1_start + parent2_end"})
     offspring2 = ModelGraph(metadata={"crossover": "parent2_start + parent1_end"})
-    
+
     try:
         # Offspring 1: first part of parent1 + second part of parent2
         for i, node in enumerate(nodes1[:point1]):
             new_node = node.clone()
             offspring1.add_node(new_node)
-        
+
         for i, node in enumerate(nodes2[point2:]):
             new_node = node.clone()
             offspring1.add_node(new_node)
-        
+
         # Connect the nodes sequentially
         all_nodes1 = list(offspring1.nodes.values())
         for i in range(len(all_nodes1) - 1):
             edge = GraphEdge(all_nodes1[i], all_nodes1[i + 1])
             offspring1.add_edge(edge)
-        
+
         # Offspring 2: first part of parent2 + second part of parent1
         for i, node in enumerate(nodes2[:point2]):
             new_node = node.clone()
             offspring2.add_node(new_node)
-        
+
         for i, node in enumerate(nodes1[point1:]):
             new_node = node.clone()
             offspring2.add_node(new_node)
-        
+
         # Connect the nodes sequentially
         all_nodes2 = list(offspring2.nodes.values())
         for i in range(len(all_nodes2) - 1):
             edge = GraphEdge(all_nodes2[i], all_nodes2[i + 1])
             offspring2.add_edge(edge)
-        
+
         logger.debug(f"Performed single-point crossover at points {point1}/{point2}")
-        
+
         # Validate offspring
         if not offspring1.is_valid() or not offspring2.is_valid():
             logger.warning("Crossover produced invalid offspring, returning clones")
             return parent1.clone(), parent2.clone()
-        
+
         return offspring1, offspring2
-        
+
     except Exception as e:
         logger.warning(f"Crossover failed: {e}, returning clones")
         return parent1.clone(), parent2.clone()

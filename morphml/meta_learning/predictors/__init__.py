@@ -22,7 +22,6 @@ __all__ = [
 
 # Optional GNN predictor (requires PyTorch)
 try:
-
     __all__.append("GNNPredictor")
 except ImportError:
     pass

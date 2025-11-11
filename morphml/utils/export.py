@@ -39,13 +39,13 @@ class ArchitectureExporter:
         >>> # Keras
         >>> keras_code = exporter.to_keras(graph)
     """
-    
+
     def __init__(self):
         """Initialize exporter with custom layer handlers."""
         self.custom_pytorch_handlers = {}
         self.custom_keras_handlers = {}
         logger.debug("Initialized ArchitectureExporter")
-    
+
     def add_custom_layer_handler(
         self,
         operation_name: str,
@@ -54,12 +54,12 @@ class ArchitectureExporter:
     ):
         """
         Add custom handler for a layer type.
-        
+
         Args:
             operation_name: Name of the operation (e.g., "custom_conv")
             pytorch_handler: Function(node, shapes) -> str for PyTorch code
             keras_handler: Function(node, shapes) -> str for Keras code
-            
+
         Example:
             >>> def my_pytorch_handler(node, shapes):
             ...     return f"nn.MyCustomLayer({node.params['size']})"
@@ -68,11 +68,11 @@ class ArchitectureExporter:
         if pytorch_handler:
             self.custom_pytorch_handlers[operation_name] = pytorch_handler
             logger.info(f"Added custom PyTorch handler for '{operation_name}'")
-        
+
         if keras_handler:
             self.custom_keras_handlers[operation_name] = keras_handler
             logger.info(f"Added custom Keras handler for '{operation_name}'")
-    
+
     def remove_custom_layer_handler(self, operation_name: str):
         """Remove custom handler for a layer type."""
         self.custom_pytorch_handlers.pop(operation_name, None)
@@ -194,7 +194,7 @@ class ArchitectureExporter:
                 kernel_size = params.get("kernel_size", 3)
                 padding = params.get("padding", "same")
                 padding_val = kernel_size // 2 if padding == "same" else 0
-                
+
                 # Try to infer input channels
                 in_channels = "?"
                 if node.predecessors:
@@ -202,7 +202,7 @@ class ArchitectureExporter:
                     pred_shape = shapes.get(pred_node.id)
                     if pred_shape and len(pred_shape) >= 3:
                         in_channels = pred_shape[0]
-                
+
                 code.append(
                     f"        self.{layer_name} = nn.Conv2d("
                     f"in_channels={in_channels}, out_channels={filters}, "
@@ -211,7 +211,7 @@ class ArchitectureExporter:
 
             elif op == "dense":
                 units = params.get("units", 128)
-                
+
                 # Try to infer input features
                 in_features = "?"
                 if node.predecessors:
@@ -223,7 +223,7 @@ class ArchitectureExporter:
                         else:
                             # Need flattening
                             in_features = int(np.prod(pred_shape))
-                
+
                 code.append(
                     f"        self.{layer_name} = nn.Linear(in_features={in_features}, out_features={units})"
                 )
@@ -248,8 +248,10 @@ class ArchitectureExporter:
                     pred_shape = shapes.get(pred_node.id)
                     if pred_shape and len(pred_shape) >= 1:
                         num_features = pred_shape[0]  # First dimension is channels
-                
-                code.append(f"        self.{layer_name} = nn.BatchNorm2d(num_features={num_features})")
+
+                code.append(
+                    f"        self.{layer_name} = nn.BatchNorm2d(num_features={num_features})"
+                )
 
             elif op == "flatten":
                 code.append(f"        self.{layer_name} = nn.Flatten()")

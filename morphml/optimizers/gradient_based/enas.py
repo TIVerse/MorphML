@@ -44,7 +44,7 @@ try:
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
-    
+
     # Create dummy torch for type hints
     if TYPE_CHECKING:
         import torch

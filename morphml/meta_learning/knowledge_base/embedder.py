@@ -140,7 +140,6 @@ class ArchitectureEmbedder:
         Falls back to simple if PyTorch not available.
         """
         try:
-
             # TODO: Implement GNN encoder
             logger.warning("GNN embedding not implemented, using simple")
             return self._embed_simple(graph)

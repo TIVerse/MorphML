@@ -452,7 +452,6 @@ class TestGNNErrorHandling:
 def test_import_without_pytorch():
     """Test that GNN predictor handles missing PyTorch gracefully."""
     try:
-
         # Import succeeded - PyTorch is available or fallback works
         assert True
     except ImportError as e:

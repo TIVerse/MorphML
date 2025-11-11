@@ -49,15 +49,15 @@ class MaxParametersConstraint(Constraint):
             return 0.0
         excess_ratio = (params - self.max_params) / self.max_params
         return min(1.0, excess_ratio)
-    
+
     def get_actual_value(self, graph: ModelGraph) -> int:
         """Get actual parameter count."""
         return graph.estimate_parameters()
-    
+
     def get_expected_range(self) -> str:
         """Get expected parameter range."""
         return f"<= {self.max_params:,}"
-    
+
     def get_violation_message(self, graph: ModelGraph) -> str:
         """Get detailed violation message."""
         actual = self.get_actual_value(graph)
@@ -87,15 +87,15 @@ class MinParametersConstraint(Constraint):
             return 0.0
         deficit_ratio = (self.min_params - params) / self.min_params
         return min(1.0, deficit_ratio)
-    
+
     def get_actual_value(self, graph: ModelGraph) -> int:
         """Get actual parameter count."""
         return graph.estimate_parameters()
-    
+
     def get_expected_range(self) -> str:
         """Get expected parameter range."""
         return f">= {self.min_params:,}"
-    
+
     def get_violation_message(self, graph: ModelGraph) -> str:
         """Get detailed violation message."""
         actual = self.get_actual_value(graph)

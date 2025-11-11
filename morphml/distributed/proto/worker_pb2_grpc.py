@@ -15,22 +15,22 @@ class MasterServiceStub(object):
             channel: A grpc.Channel.
         """
         self.RegisterWorker = channel.unary_unary(
-            '/morphml.distributed.MasterService/RegisterWorker',
+            "/morphml.distributed.MasterService/RegisterWorker",
             request_serializer=worker__pb2.RegisterRequest.SerializeToString,
             response_deserializer=worker__pb2.RegisterResponse.FromString,
         )
         self.Heartbeat = channel.unary_unary(
-            '/morphml.distributed.MasterService/Heartbeat',
+            "/morphml.distributed.MasterService/Heartbeat",
             request_serializer=worker__pb2.HeartbeatRequest.SerializeToString,
             response_deserializer=worker__pb2.HeartbeatResponse.FromString,
         )
         self.SubmitResult = channel.unary_unary(
-            '/morphml.distributed.MasterService/SubmitResult',
+            "/morphml.distributed.MasterService/SubmitResult",
             request_serializer=worker__pb2.ResultRequest.SerializeToString,
             response_deserializer=worker__pb2.ResultResponse.FromString,
         )
         self.RequestTask = channel.unary_unary(
-            '/morphml.distributed.MasterService/RequestTask',
+            "/morphml.distributed.MasterService/RequestTask",
             request_serializer=worker__pb2.TaskRequest.SerializeToString,
             response_deserializer=worker__pb2.TaskResponse.FromString,
         )
@@ -42,53 +42,53 @@ class MasterServiceServicer(object):
     def RegisterWorker(self, request, context):
         """Register a new worker with the master"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def Heartbeat(self, request, context):
         """Send periodic heartbeat"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def SubmitResult(self, request, context):
         """Submit evaluation result"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def RequestTask(self, request, context):
         """Request a task (pull model)"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_MasterServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        'RegisterWorker': grpc.unary_unary_rpc_method_handler(
+        "RegisterWorker": grpc.unary_unary_rpc_method_handler(
             servicer.RegisterWorker,
             request_deserializer=worker__pb2.RegisterRequest.FromString,
             response_serializer=worker__pb2.RegisterResponse.SerializeToString,
         ),
-        'Heartbeat': grpc.unary_unary_rpc_method_handler(
+        "Heartbeat": grpc.unary_unary_rpc_method_handler(
             servicer.Heartbeat,
             request_deserializer=worker__pb2.HeartbeatRequest.FromString,
             response_serializer=worker__pb2.HeartbeatResponse.SerializeToString,
         ),
-        'SubmitResult': grpc.unary_unary_rpc_method_handler(
+        "SubmitResult": grpc.unary_unary_rpc_method_handler(
             servicer.SubmitResult,
             request_deserializer=worker__pb2.ResultRequest.FromString,
             response_serializer=worker__pb2.ResultResponse.SerializeToString,
         ),
-        'RequestTask': grpc.unary_unary_rpc_method_handler(
+        "RequestTask": grpc.unary_unary_rpc_method_handler(
             servicer.RequestTask,
             request_deserializer=worker__pb2.TaskRequest.FromString,
             response_serializer=worker__pb2.TaskResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        'morphml.distributed.MasterService', rpc_method_handlers
+        "morphml.distributed.MasterService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
 
@@ -113,7 +113,7 @@ class MasterService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.MasterService/RegisterWorker',
+            "/morphml.distributed.MasterService/RegisterWorker",
             worker__pb2.RegisterRequest.SerializeToString,
             worker__pb2.RegisterResponse.FromString,
             options,
@@ -142,7 +142,7 @@ class MasterService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.MasterService/Heartbeat',
+            "/morphml.distributed.MasterService/Heartbeat",
             worker__pb2.HeartbeatRequest.SerializeToString,
             worker__pb2.HeartbeatResponse.FromString,
             options,
@@ -171,7 +171,7 @@ class MasterService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.MasterService/SubmitResult',
+            "/morphml.distributed.MasterService/SubmitResult",
             worker__pb2.ResultRequest.SerializeToString,
             worker__pb2.ResultResponse.FromString,
             options,
@@ -200,7 +200,7 @@ class MasterService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.MasterService/RequestTask',
+            "/morphml.distributed.MasterService/RequestTask",
             worker__pb2.TaskRequest.SerializeToString,
             worker__pb2.TaskResponse.FromString,
             options,
@@ -224,22 +224,22 @@ class WorkerServiceStub(object):
             channel: A grpc.Channel.
         """
         self.Evaluate = channel.unary_unary(
-            '/morphml.distributed.WorkerService/Evaluate',
+            "/morphml.distributed.WorkerService/Evaluate",
             request_serializer=worker__pb2.EvaluateRequest.SerializeToString,
             response_deserializer=worker__pb2.EvaluateResponse.FromString,
         )
         self.GetStatus = channel.unary_unary(
-            '/morphml.distributed.WorkerService/GetStatus',
+            "/morphml.distributed.WorkerService/GetStatus",
             request_serializer=worker__pb2.StatusRequest.SerializeToString,
             response_deserializer=worker__pb2.StatusResponse.FromString,
         )
         self.Shutdown = channel.unary_unary(
-            '/morphml.distributed.WorkerService/Shutdown',
+            "/morphml.distributed.WorkerService/Shutdown",
             request_serializer=worker__pb2.ShutdownRequest.SerializeToString,
             response_deserializer=worker__pb2.ShutdownResponse.FromString,
         )
         self.CancelTask = channel.unary_unary(
-            '/morphml.distributed.WorkerService/CancelTask',
+            "/morphml.distributed.WorkerService/CancelTask",
             request_serializer=worker__pb2.CancelRequest.SerializeToString,
             response_deserializer=worker__pb2.CancelResponse.FromString,
         )
@@ -251,53 +251,53 @@ class WorkerServiceServicer(object):
     def Evaluate(self, request, context):
         """Evaluate an architecture (push model)"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetStatus(self, request, context):
         """Get worker status"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def Shutdown(self, request, context):
         """Shutdown worker gracefully"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CancelTask(self, request, context):
         """Cancel running task"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_WorkerServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        'Evaluate': grpc.unary_unary_rpc_method_handler(
+        "Evaluate": grpc.unary_unary_rpc_method_handler(
             servicer.Evaluate,
             request_deserializer=worker__pb2.EvaluateRequest.FromString,
             response_serializer=worker__pb2.EvaluateResponse.SerializeToString,
         ),
-        'GetStatus': grpc.unary_unary_rpc_method_handler(
+        "GetStatus": grpc.unary_unary_rpc_method_handler(
             servicer.GetStatus,
             request_deserializer=worker__pb2.StatusRequest.FromString,
             response_serializer=worker__pb2.StatusResponse.SerializeToString,
         ),
-        'Shutdown': grpc.unary_unary_rpc_method_handler(
+        "Shutdown": grpc.unary_unary_rpc_method_handler(
             servicer.Shutdown,
             request_deserializer=worker__pb2.ShutdownRequest.FromString,
             response_serializer=worker__pb2.ShutdownResponse.SerializeToString,
         ),
-        'CancelTask': grpc.unary_unary_rpc_method_handler(
+        "CancelTask": grpc.unary_unary_rpc_method_handler(
             servicer.CancelTask,
             request_deserializer=worker__pb2.CancelRequest.FromString,
             response_serializer=worker__pb2.CancelResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        'morphml.distributed.WorkerService', rpc_method_handlers
+        "morphml.distributed.WorkerService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
 
@@ -322,7 +322,7 @@ class WorkerService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.WorkerService/Evaluate',
+            "/morphml.distributed.WorkerService/Evaluate",
             worker__pb2.EvaluateRequest.SerializeToString,
             worker__pb2.EvaluateResponse.FromString,
             options,
@@ -351,7 +351,7 @@ class WorkerService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.WorkerService/GetStatus',
+            "/morphml.distributed.WorkerService/GetStatus",
             worker__pb2.StatusRequest.SerializeToString,
             worker__pb2.StatusResponse.FromString,
             options,
@@ -380,7 +380,7 @@ class WorkerService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.WorkerService/Shutdown',
+            "/morphml.distributed.WorkerService/Shutdown",
             worker__pb2.ShutdownRequest.SerializeToString,
             worker__pb2.ShutdownResponse.FromString,
             options,
@@ -409,7 +409,7 @@ class WorkerService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/morphml.distributed.WorkerService/CancelTask',
+            "/morphml.distributed.WorkerService/CancelTask",
             worker__pb2.CancelRequest.SerializeToString,
             worker__pb2.CancelResponse.FromString,
             options,

@@ -16,7 +16,6 @@ from morphml.logging_config import get_logger
 logger = get_logger(__name__)
 
 try:
-
     DB_AVAILABLE = True
 except ImportError:
     DB_AVAILABLE = False
@@ -206,9 +205,7 @@ class ExperimentDatabase:
         """Convert database Experiment to TaskMetadata."""
         try:
             config = json.loads(experiment.config) if hasattr(experiment, "config") else {}
-            (
-                json.loads(experiment.search_space) if hasattr(experiment, "search_space") else {}
-            )
+            (json.loads(experiment.search_space) if hasattr(experiment, "search_space") else {})
 
             # Extract metadata
             return TaskMetadata(

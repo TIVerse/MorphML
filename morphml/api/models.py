@@ -7,14 +7,16 @@ from pydantic import BaseModel, Field
 
 class ExperimentCreate(BaseModel):
     """Request model for creating an experiment."""
-    
+
     name: str = Field(..., description="Experiment name")
     search_space_config: Dict[str, Any] = Field(..., description="Search space configuration")
     optimizer_type: str = Field("genetic", description="Optimizer type")
-    optimizer_config: Dict[str, Any] = Field(default_factory=dict, description="Optimizer configuration")
+    optimizer_config: Dict[str, Any] = Field(
+        default_factory=dict, description="Optimizer configuration"
+    )
     budget: int = Field(100, description="Evaluation budget")
     constraints: Optional[List[Dict[str, Any]]] = Field(None, description="Constraints")
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -28,18 +30,15 @@ class ExperimentCreate(BaseModel):
                     ]
                 },
                 "optimizer_type": "genetic",
-                "optimizer_config": {
-                    "population_size": 20,
-                    "num_generations": 50
-                },
-                "budget": 1000
+                "optimizer_config": {"population_size": 20, "num_generations": 50},
+                "budget": 1000,
             }
         }
 
 
 class ExperimentResponse(BaseModel):
     """Response model for experiment."""
-    
+
     id: str
     name: str
     status: str  # pending, running, completed, failed
@@ -49,7 +48,7 @@ class ExperimentResponse(BaseModel):
     best_fitness: Optional[float] = None
     generations_completed: int = 0
     total_generations: int
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -60,14 +59,14 @@ class ExperimentResponse(BaseModel):
                 "started_at": "2024-11-11T05:01:00Z",
                 "best_fitness": 0.9523,
                 "generations_completed": 25,
-                "total_generations": 50
+                "total_generations": 50,
             }
         }
 
 
 class ArchitectureResponse(BaseModel):
     """Response model for architecture."""
-    
+
     id: str
     experiment_id: str
     fitness: float
@@ -77,7 +76,7 @@ class ArchitectureResponse(BaseModel):
     edges: int
     created_at: datetime
     graph_data: Optional[Dict[str, Any]] = None
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -88,14 +87,14 @@ class ArchitectureResponse(BaseModel):
                 "depth": 8,
                 "nodes": 12,
                 "edges": 11,
-                "created_at": "2024-11-11T05:15:00Z"
+                "created_at": "2024-11-11T05:15:00Z",
             }
         }
 
 
 class SearchSpaceCreate(BaseModel):
     """Request model for creating a search space."""
-    
+
     name: str
     layers: List[Dict[str, Any]]
     constraints: Optional[List[Dict[str, Any]]] = None
@@ -103,12 +102,12 @@ class SearchSpaceCreate(BaseModel):
 
 class OptimizerInfo(BaseModel):
     """Information about an optimizer."""
-    
+
     name: str
     type: str
     description: str
     parameters: Dict[str, Any]
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -118,15 +117,15 @@ class OptimizerInfo(BaseModel):
                 "parameters": {
                     "population_size": {"type": "int", "default": 20},
                     "num_generations": {"type": "int", "default": 50},
-                    "mutation_rate": {"type": "float", "default": 0.2}
-                }
+                    "mutation_rate": {"type": "float", "default": 0.2},
+                },
             }
         }
 
 
 class HealthResponse(BaseModel):
     """Health check response."""
-    
+
     status: str
     version: str
     timestamp: datetime

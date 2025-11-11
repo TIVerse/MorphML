@@ -134,7 +134,6 @@ print("\n📋 Required Classes:")
 
 # Check for parameter classes
 try:
-
     test_pass(
         "Parameter classes (CategoricalParameter, IntegerParameter, FloatParameter, BooleanParameter)"
     )
@@ -143,7 +142,6 @@ except Exception as e:
 
 # Check for search engine
 try:
-
     test_pass("SearchEngine base class")
 except Exception as e:
     test_fail("SearchEngine base class", e)
@@ -158,7 +156,6 @@ except Exception as e:
 
 # Check for search space
 try:
-
     test_pass("SearchSpace class")
 except Exception as e:
     test_fail("SearchSpace class", e)

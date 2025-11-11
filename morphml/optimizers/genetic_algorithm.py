@@ -233,10 +233,10 @@ class GeneticAlgorithm:
 
         # Perform graph crossover
         offspring_graph1, offspring_graph2 = graph_crossover(parent1.graph, parent2.graph)
-        
+
         # Randomly select one of the two offspring
         selected_graph = random.choice([offspring_graph1, offspring_graph2])
-        
+
         # Create new individual
         offspring = Individual(selected_graph)
         offspring.parent_ids = [parent1.id, parent2.id]

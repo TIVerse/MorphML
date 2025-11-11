@@ -68,7 +68,6 @@ except Exception as e:
     test_fail("Version module", e)
 
 try:
-
     test_pass("Exception classes imported")
 except Exception as e:
     test_fail("Exception classes", e)
@@ -250,7 +249,6 @@ except Exception as e:
 
 # Test visualization (syntax only, no display)
 try:
-
     test_pass("Visualization: Module imports successful")
 except Exception as e:
     test_fail("Visualization module", e)
@@ -367,13 +365,11 @@ except Exception as e:
     test_fail("ArchitectureExporter", e)
 
 try:
-
     test_pass("Checkpoint: Module imported successfully")
 except Exception as e:
     test_fail("Checkpoint module", e)
 
 try:
-
     test_pass("CLI: Command-line interface imported successfully")
 except Exception as e:
     test_fail("CLI module", e)
