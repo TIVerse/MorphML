@@ -21,6 +21,11 @@ from morphml.visualization.pareto_plot import (
 from morphml.visualization.population import PopulationVisualizer
 from morphml.visualization.progress import ProgressPlotter
 
+# Phase 5: Interactive dashboards and professional diagrams
+from morphml.visualization.plotly_dashboards import InteractiveDashboard
+from morphml.visualization.architecture_diagrams import ArchitectureDiagramGenerator
+from morphml.visualization.analytics import PerformanceAnalytics
+
 __all__ = [
     # Phase 1
     "GraphVisualizer",
@@ -38,4 +43,8 @@ __all__ = [
     "plot_architecture",
     "plot_architecture_hierarchy",
     "plot_architecture_stats",
+    # Phase 5: Interactive & Professional
+    "InteractiveDashboard",
+    "ArchitectureDiagramGenerator",
+    "PerformanceAnalytics",
 ]
