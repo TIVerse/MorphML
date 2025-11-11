@@ -635,70 +635,71 @@ class MasterNode:
         return {"best_fitness": 0.0, "avg_fitness": 0.0, "min_fitness": 0.0}
 
 
-class MasterServicer(worker_pb2_grpc.MasterServiceServicer):
-    """gRPC servicer for master node."""
+if GRPC_AVAILABLE:
+    class MasterServicer(worker_pb2_grpc.MasterServiceServicer):
+        """gRPC servicer for master node."""
 
-    def __init__(self, master: MasterNode):
-        """Initialize servicer."""
-        self.master = master
+        def __init__(self, master: MasterNode):
+            """Initialize servicer."""
+            self.master = master
 
-    def RegisterWorker(
-        self, request: worker_pb2.RegisterRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.RegisterResponse:
-        """Handle worker registration."""
-        try:
-            worker_info = {
-                "host": request.host,
-                "port": request.port,
-                "num_gpus": request.num_gpus,
-                "gpu_ids": list(request.gpu_ids),
-                "metadata": dict(request.metadata),
-            }
+        def RegisterWorker(
+            self, request: worker_pb2.RegisterRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.RegisterResponse:
+            """Handle worker registration."""
+            try:
+                worker_info = {
+                    "host": request.host,
+                    "port": request.port,
+                    "num_gpus": request.num_gpus,
+                    "gpu_ids": list(request.gpu_ids),
+                    "metadata": dict(request.metadata),
+                }
 
-            success = self.master.register_worker(request.worker_id, worker_info)
+                success = self.master.register_worker(request.worker_id, worker_info)
 
-            return worker_pb2.RegisterResponse(
-                success=success,
-                message="Worker registered successfully",
-                master_id=self.master.master_id,
+                return worker_pb2.RegisterResponse(
+                    success=success,
+                    message="Worker registered successfully",
+                    master_id=self.master.master_id,
+                )
+
+            except Exception as e:
+                logger.error(f"Worker registration failed: {e}")
+                return worker_pb2.RegisterResponse(
+                    success=False, message=str(e), master_id=self.master.master_id
+                )
+
+        def Heartbeat(
+            self, request: worker_pb2.HeartbeatRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.HeartbeatResponse:
+            """Handle worker heartbeat."""
+            success = self.master.update_heartbeat(request.worker_id, request.status)
+
+            return worker_pb2.HeartbeatResponse(
+                acknowledged=success, should_continue=self.master.running
             )
 
-        except Exception as e:
-            logger.error(f"Worker registration failed: {e}")
-            return worker_pb2.RegisterResponse(
-                success=False, message=str(e), master_id=self.master.master_id
-            )
+        def SubmitResult(
+            self, request: worker_pb2.ResultRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.ResultResponse:
+            """Handle task result submission."""
+            try:
+                if request.success:
+                    result = dict(request.metrics)
+                    self.master._handle_task_result(request.task_id, result, request.duration)
+                else:
+                    self.master._handle_task_failure(request.task_id, request.error)
 
-    def Heartbeat(
-        self, request: worker_pb2.HeartbeatRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.HeartbeatResponse:
-        """Handle worker heartbeat."""
-        success = self.master.update_heartbeat(request.worker_id, request.status)
+                return worker_pb2.ResultResponse(acknowledged=True, message="Result received")
 
-        return worker_pb2.HeartbeatResponse(
-            acknowledged=success, should_continue=self.master.running
-        )
+            except Exception as e:
+                logger.error(f"Failed to handle result: {e}")
+                return worker_pb2.ResultResponse(acknowledged=False, message=str(e))
 
-    def SubmitResult(
-        self, request: worker_pb2.ResultRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.ResultResponse:
-        """Handle task result submission."""
-        try:
-            if request.success:
-                result = dict(request.metrics)
-                self.master._handle_task_result(request.task_id, result, request.duration)
-            else:
-                self.master._handle_task_failure(request.task_id, request.error)
-
-            return worker_pb2.ResultResponse(acknowledged=True, message="Result received")
-
-        except Exception as e:
-            logger.error(f"Failed to handle result: {e}")
-            return worker_pb2.ResultResponse(acknowledged=False, message=str(e))
-
-    def RequestTask(
-        self, request: worker_pb2.TaskRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.TaskResponse:
-        """Handle task request from worker (pull model)."""
-        # Pull model implementation for future use
-        return worker_pb2.TaskResponse(has_task=False, tasks=[])
+        def RequestTask(
+            self, request: worker_pb2.TaskRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.TaskResponse:
+            """Handle task request from worker (pull model)."""
+            # Pull model implementation for future use
+            return worker_pb2.TaskResponse(has_task=False, tasks=[])

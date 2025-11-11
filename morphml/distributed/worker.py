@@ -410,135 +410,136 @@ class WorkerNode:
         }
 
 
-class WorkerServicer(worker_pb2_grpc.WorkerServiceServicer):
-    """gRPC servicer for worker node."""
+if GRPC_AVAILABLE:
+    class WorkerServicer(worker_pb2_grpc.WorkerServiceServicer):
+        """gRPC servicer for worker node."""
 
-    def __init__(self, worker: WorkerNode):
-        """Initialize servicer."""
-        self.worker = worker
+        def __init__(self, worker: WorkerNode):
+            """Initialize servicer."""
+            self.worker = worker
 
-    def Evaluate(
-        self, request: worker_pb2.EvaluateRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.EvaluateResponse:
-        """Handle evaluation task."""
-        task_id = request.task_id
+        def Evaluate(
+            self, request: worker_pb2.EvaluateRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.EvaluateResponse:
+            """Handle evaluation task."""
+            task_id = request.task_id
 
-        logger.info(f"Received evaluation task: {task_id}")
+            logger.info(f"Received evaluation task: {task_id}")
 
-        self.worker.current_task_id = task_id
-        start_time = time.time()
+            self.worker.current_task_id = task_id
+            start_time = time.time()
 
-        try:
-            # Deserialize architecture
-            architecture = ModelGraph.from_json(request.architecture)
+            try:
+                # Deserialize architecture
+                architecture = ModelGraph.from_json(request.architecture)
 
-            # Evaluate
-            result = self.worker.evaluate_architecture(architecture)
+                # Evaluate
+                result = self.worker.evaluate_architecture(architecture)
 
-            duration = time.time() - start_time
+                duration = time.time() - start_time
 
-            # Update stats
-            self.worker.tasks_completed += 1
-            self.worker.current_task_id = None
+                # Update stats
+                self.worker.tasks_completed += 1
+                self.worker.current_task_id = None
 
-            # Submit result to master
-            self.worker._submit_result(
-                task_id=task_id,
-                success=True,
-                metrics=result,
-                duration=duration,
+                # Submit result to master
+                self.worker._submit_result(
+                    task_id=task_id,
+                    success=True,
+                    metrics=result,
+                    duration=duration,
+                )
+
+                # Return response
+                return worker_pb2.EvaluateResponse(
+                    task_id=task_id,
+                    success=True,
+                    metrics=result,
+                    error="",
+                    duration=duration,
+                )
+
+            except Exception as e:
+                duration = time.time() - start_time
+                error_msg = str(e)
+
+                logger.error(f"Evaluation failed for task {task_id}: {error_msg}")
+
+                # Update stats
+                self.worker.tasks_failed += 1
+                self.worker.current_task_id = None
+
+                # Submit failure to master
+                self.worker._submit_result(
+                    task_id=task_id,
+                    success=False,
+                    metrics={},
+                    error=error_msg,
+                    duration=duration,
+                )
+
+                return worker_pb2.EvaluateResponse(
+                    task_id=task_id,
+                    success=False,
+                    metrics={},
+                    error=error_msg,
+                    duration=duration,
+                )
+
+        def GetStatus(
+            self, request: worker_pb2.StatusRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.StatusResponse:
+            """Handle status request."""
+            status = self.worker.get_status()
+
+            metrics = worker_pb2.WorkerMetrics(
+                cpu_usage=status["cpu_usage"],
+                memory_usage=status["memory_usage"],
+                gpu_usage=status["gpu_usage"],
+                gpu_memory=status["gpu_memory"],
+                tasks_completed=status["tasks_completed"],
+                tasks_failed=status["tasks_failed"],
             )
 
-            # Return response
-            return worker_pb2.EvaluateResponse(
-                task_id=task_id,
-                success=True,
-                metrics=result,
-                error="",
-                duration=duration,
+            return worker_pb2.StatusResponse(
+                status=status["status"],
+                current_task_id=status["current_task"] or "",
+                metrics=metrics,
+                uptime_seconds=int(status["uptime_seconds"]),
             )
 
-        except Exception as e:
-            duration = time.time() - start_time
-            error_msg = str(e)
-
-            logger.error(f"Evaluation failed for task {task_id}: {error_msg}")
-
-            # Update stats
-            self.worker.tasks_failed += 1
-            self.worker.current_task_id = None
-
-            # Submit failure to master
-            self.worker._submit_result(
-                task_id=task_id,
-                success=False,
-                metrics={},
-                error=error_msg,
-                duration=duration,
+        def Shutdown(
+            self, request: worker_pb2.ShutdownRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.ShutdownResponse:
+            """Handle shutdown request."""
+            logger.info(
+                f"Shutdown requested (graceful={request.graceful}) for worker {request.worker_id}"
             )
 
-            return worker_pb2.EvaluateResponse(
-                task_id=task_id,
-                success=False,
-                metrics={},
-                error=error_msg,
-                duration=duration,
-            )
+            if request.graceful:
+                # Wait for current task to finish
+                while self.worker.current_task_id:
+                    time.sleep(1)
 
-    def GetStatus(
-        self, request: worker_pb2.StatusRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.StatusResponse:
-        """Handle status request."""
-        status = self.worker.get_status()
+            # Stop worker
+            self.worker.stop()
 
-        metrics = worker_pb2.WorkerMetrics(
-            cpu_usage=status["cpu_usage"],
-            memory_usage=status["memory_usage"],
-            gpu_usage=status["gpu_usage"],
-            gpu_memory=status["gpu_memory"],
-            tasks_completed=status["tasks_completed"],
-            tasks_failed=status["tasks_failed"],
-        )
+            return worker_pb2.ShutdownResponse(acknowledged=True)
 
-        return worker_pb2.StatusResponse(
-            status=status["status"],
-            current_task_id=status["current_task"] or "",
-            metrics=metrics,
-            uptime_seconds=int(status["uptime_seconds"]),
-        )
+        def CancelTask(
+            self, request: worker_pb2.CancelRequest, context: grpc.ServicerContext
+        ) -> worker_pb2.CancelResponse:
+            """Handle task cancellation."""
+            task_id = request.task_id
 
-    def Shutdown(
-        self, request: worker_pb2.ShutdownRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.ShutdownResponse:
-        """Handle shutdown request."""
-        logger.info(
-            f"Shutdown requested (graceful={request.graceful}) for worker {request.worker_id}"
-        )
+            if self.worker.current_task_id == task_id:
+                logger.warning(f"Cancelling task {task_id}")
+                # Note: Actual cancellation would require more complex logic
+                # For now, just clear the task ID
+                self.worker.current_task_id = None
 
-        if request.graceful:
-            # Wait for current task to finish
-            while self.worker.current_task_id:
-                time.sleep(1)
-
-        # Stop worker
-        self.worker.stop()
-
-        return worker_pb2.ShutdownResponse(acknowledged=True)
-
-    def CancelTask(
-        self, request: worker_pb2.CancelRequest, context: grpc.ServicerContext
-    ) -> worker_pb2.CancelResponse:
-        """Handle task cancellation."""
-        task_id = request.task_id
-
-        if self.worker.current_task_id == task_id:
-            logger.warning(f"Cancelling task {task_id}")
-            # Note: Actual cancellation would require more complex logic
-            # For now, just clear the task ID
-            self.worker.current_task_id = None
-
-            return worker_pb2.CancelResponse(success=True, message="Task cancelled")
-        else:
-            return worker_pb2.CancelResponse(
-                success=False, message=f"Task {task_id} not running on this worker"
-            )
+                return worker_pb2.CancelResponse(success=True, message="Task cancelled")
+            else:
+                return worker_pb2.CancelResponse(
+                    success=False, message=f"Task {task_id} not running on this worker"
+                )

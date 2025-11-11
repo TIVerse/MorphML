@@ -100,6 +100,31 @@ def upper_confidence_bound(mu: np.ndarray, sigma: np.ndarray, kappa: float = 2.5
     return mu + kappa * sigma
 
 
+def lower_confidence_bound(mu: np.ndarray, sigma: np.ndarray, kappa: float = 2.576) -> np.ndarray:
+    """
+    Lower Confidence Bound acquisition function (for minimization).
+    
+    LCB is the opposite of UCB, used for minimization problems.
+    It balances exploitation (low mean) with exploration (high uncertainty).
+    
+    Args:
+        mu: Predicted means from the surrogate model
+        sigma: Predicted standard deviations
+        kappa: Exploration-exploitation trade-off parameter.
+               Higher values favor exploration.
+               Default 2.576 corresponds to 99% confidence interval.
+    
+    Returns:
+        LCB values for each point
+        
+    Example:
+        >>> mu = np.array([0.5, 0.7])
+        >>> sigma = np.array([0.1, 0.2])
+        >>> lcb = lower_confidence_bound(mu, sigma, kappa=2.0)
+    """
+    return mu - kappa * sigma
+
+
 def probability_of_improvement(
     mu: np.ndarray, sigma: np.ndarray, f_best: float, xi: float = 0.01
 ) -> np.ndarray:
