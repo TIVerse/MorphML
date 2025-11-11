@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "morphml"
-version = "0.1.0"
+version = "1.0.0"
 description = "Production-grade Neural Architecture Search framework with distributed optimization and meta-learning"
 authors = [
     "Vedanth <vedanth@vedanthq.com>",
