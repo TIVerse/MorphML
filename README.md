@@ -14,14 +14,18 @@ MorphML is a comprehensive framework for **automated neural architecture search 
 
 **Key Features:**
 
-- 🔬 **Multiple Optimization Algorithms**: Genetic Algorithm, Random Search, Hill Climbing
-- 🎯 **Pythonic DSL**: Intuitive search space definition with 13+ layer types
+- 🔬 **Multiple Optimization Algorithms**: Genetic Algorithm, Random Search, Hill Climbing, Bayesian, Multi-objective
+- 🎯 **Pythonic DSL**: Intuitive search space definition with 13+ layer types including **flatten layer**
 - 🚀 **Heuristic Evaluators**: Fast architecture assessment without training
 - 💾 **Checkpointing**: Save and resume long-running searches
-- 📤 **Code Export**: Generate PyTorch/Keras code from architectures
-- 🧬 **Population Management**: Advanced selection strategies and diversity tracking
+- 📤 **Smart Code Export**: Generate PyTorch/Keras code with **automatic shape inference**
+- 🧬 **Advanced Crossover**: True genetic crossover with **visualization support**
+- 🎚️ **Adaptive Operators**: Automatic crossover/mutation rate tuning based on diversity
+- 🔍 **Enhanced Constraints**: Detailed violation messages with actual vs expected values
+- 🎨 **Visualization**: Crossover operations, diversity analysis, architecture comparison
+- 🔧 **Extensible**: Custom layer handlers for any operation type
 - 📊 **Production Ready**: 91 tests passing, 76% coverage, full type safety
-- 📚 **Comprehensive Docs**: User guide, API reference, and examples
+- 📚 **Comprehensive Docs**: User guide, API reference, tutorials, and 20+ examples
 
 ---
 
@@ -69,6 +73,7 @@ space.add_layers(
     Layer.conv2d(filters=[32, 64, 128], kernel_size=[3, 5]),
     Layer.relu(),
     Layer.maxpool(pool_size=2),
+    Layer.flatten(),  # Essential for CNN -> Dense transition
     Layer.dense(units=[128, 256, 512]),
     Layer.output(units=10)
 )
@@ -118,6 +123,68 @@ with open('model.py', 'w') as f:
 keras_code = exporter.to_keras(best.graph)
 with open('model_keras.py', 'w') as f:
     f.write(keras_code)
+```
+
+---
+
+## ✨ Enhanced Features (P1-P3)
+
+### Adaptive Operators
+Automatically tune crossover and mutation rates based on population diversity:
+
+```python
+from morphml.optimizers.adaptive_operators import AdaptiveOperatorScheduler
+
+scheduler = AdaptiveOperatorScheduler(
+    initial_crossover=0.8,
+    initial_mutation=0.2
+)
+
+# During optimization
+crossover_rate, mutation_rate = scheduler.get_rates(
+    population, best_fitness, generation
+)
+```
+
+### Crossover Visualization
+Visualize how parent architectures combine:
+
+```python
+from morphml.visualization.crossover_viz import quick_crossover_viz
+
+quick_crossover_viz(parent1, parent2, "crossover.png")
+```
+
+### Enhanced Constraint Messages
+Get detailed violation information:
+
+```python
+from morphml.constraints import ConstraintHandler, MaxParametersConstraint
+
+handler = ConstraintHandler()
+handler.add_constraint(MaxParametersConstraint(max_params=1000000))
+
+if not handler.check(graph):
+    print(handler.format_violations(graph))
+    # Output:
+    # Found 1 constraint violation(s):
+    # 1. max_parameters
+    #    Message: Architecture has 1,250,000 parameters, exceeding limit by 250,000
+    #    Actual: 1,250,000
+    #    Expected: <= 1,000,000
+    #    Penalty: 0.2500
+```
+
+### Custom Layer Handlers
+Extend export system for custom operations:
+
+```python
+exporter = ArchitectureExporter()
+
+def attention_handler(node, shapes):
+    return f"nn.MultiheadAttention(embed_dim={node.params['dim']}, num_heads={node.params['heads']})"
+
+exporter.add_custom_layer_handler("attention", pytorch_handler=attention_handler)
 ```
 
 ---
@@ -264,9 +331,9 @@ MorphML is released under the [MIT License](LICENSE).
 
 Built with ❤️ by [TONMOY INFRASTRUCTURE & VISION](https://github.com/TIVerse)
 
-**Maintainers:**
-- Eshan Roy ([@eshanized](https://github.com/eshanized))
+**Authors & Maintainers:**
 - Vedanth ([@vedanthq](https://github.com/vedanthq))
+- Eshan Roy ([@eshanized](https://github.com/eshanized))
 
 ---
 
