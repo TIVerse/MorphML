@@ -11,19 +11,20 @@ Tests all components of Phase 1 to verify completeness:
 
 Author: Eshan Roy <eshanized@proton.me>
 Organization: TONMOY INFRASTRUCTURE & VISION
+
+Note: This is a script-style test file. Run directly with: python tests/test_phase1_complete.py
 """
 
 import sys
 import tempfile
 from pathlib import Path
 
+# Prevent pytest from collecting this file
+collect_ignore = [__file__]
+pytest_collect_file = lambda *args: None
+
 # Add project to path
 sys.path.insert(0, str(Path(__file__).parent))
-
-print("=" * 70)
-print("PHASE 1 COMPREHENSIVE TEST SUITE")
-print("=" * 70)
-print()
 
 # Track test results
 tests_passed = 0
@@ -58,9 +59,17 @@ def test_fail(message, error=None):
 # =============================================================================
 # Component 1: Project Infrastructure
 # =============================================================================
-test_section("Component 1: Project Infrastructure")
 
-try:
+# Only run tests if executed as script, not during pytest collection
+if __name__ == "__main__":
+    print("=" * 70)
+    print("PHASE 1 COMPREHENSIVE TEST SUITE")
+    print("=" * 70)
+    print()
+    
+    test_section("Component 1: Project Infrastructure")
+
+    try:
     from morphml import __version__
 
     test_pass(f"Version module works ({__version__})")
@@ -401,5 +410,17 @@ else:
 print("=" * 70)
 print()
 
-# Exit with appropriate code
-sys.exit(0 if tests_failed == 0 else 1)
+    # Return test results
+    return tests_failed == 0
+
+
+# Pytest-compatible test function
+def test_phase1_complete():
+    """Run Phase 1 comprehensive tests."""
+    assert run_tests(), "Phase 1 tests failed"
+
+
+# Allow running as script
+if __name__ == "__main__":
+    success = run_tests()
+    sys.exit(0 if success else 1)
