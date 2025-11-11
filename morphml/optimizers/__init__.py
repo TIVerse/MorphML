@@ -29,8 +29,8 @@ try:
 
     _GRADIENT_BASED_AVAILABLE = True
 except ImportError:
-    DARTS = None
-    ENAS = None
+    DARTS = None  # type: ignore[misc]
+    ENAS = None  # type: ignore[misc]
     _GRADIENT_BASED_AVAILABLE = False
 
 # Phase 2: Multi-objective (canonical NSGA-II from multi_objective module)
