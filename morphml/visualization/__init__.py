@@ -1,5 +1,7 @@
 """Visualization tools for architectures and optimization."""
 
+from morphml.visualization.analytics import PerformanceAnalytics
+from morphml.visualization.architecture_diagrams import ArchitectureDiagramGenerator
 from morphml.visualization.architecture_plot import (
     plot_architecture,
     plot_architecture_hierarchy,
@@ -18,13 +20,11 @@ from morphml.visualization.pareto_plot import (
     plot_pareto_front_2d,
     plot_pareto_front_3d,
 )
-from morphml.visualization.population import PopulationVisualizer
-from morphml.visualization.progress import ProgressPlotter
 
 # Phase 5: Interactive dashboards and professional diagrams
 from morphml.visualization.plotly_dashboards import InteractiveDashboard
-from morphml.visualization.architecture_diagrams import ArchitectureDiagramGenerator
-from morphml.visualization.analytics import PerformanceAnalytics
+from morphml.visualization.population import PopulationVisualizer
+from morphml.visualization.progress import ProgressPlotter
 
 __all__ = [
     # Phase 1

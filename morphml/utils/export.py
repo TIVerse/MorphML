@@ -97,7 +97,7 @@ class ArchitectureExporter:
             filters = params.get("filters", 64)
             kernel_size = params.get("kernel_size", 3)
             padding = params.get("padding", "same")
-            padding_val = kernel_size // 2 if padding == "same" else 0
+            kernel_size // 2 if padding == "same" else 0
 
             if len(pred_shape) == 3:
                 return (filters, pred_shape[1], pred_shape[2])

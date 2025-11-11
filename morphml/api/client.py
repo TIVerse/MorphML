@@ -9,7 +9,8 @@ Example:
     >>> exp = client.create_experiment("my-experiment", search_space={...})
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 import requests
 from requests.exceptions import RequestException
 

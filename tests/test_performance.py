@@ -13,7 +13,7 @@ import pytest
 
 from morphml.core.dsl import Layer, SearchSpace
 from morphml.core.graph import ModelGraph
-from morphml.optimizers import GeneticAlgorithm, RandomSearch, HillClimbing
+from morphml.optimizers import GeneticAlgorithm, HillClimbing, RandomSearch
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ class TestOptimizerThroughput:
         # Initialize population
         population = optimizer.initialize()
 
-        for generation in range(10):
+        for _generation in range(10):
             # Evaluate
             for individual in population.individuals:
                 result = fast_evaluator(individual.genome)
@@ -94,7 +94,7 @@ class TestGraphOperations:
         """Test graph creation is fast."""
         start_time = time.time()
 
-        graphs = [search_space.sample() for _ in range(1000)]
+        [search_space.sample() for _ in range(1000)]
 
         elapsed = time.time() - start_time
         rate = 1000 / elapsed
@@ -108,7 +108,7 @@ class TestGraphOperations:
 
         start_time = time.time()
 
-        clones = [graph.clone() for _ in range(1000)]
+        [graph.clone() for _ in range(1000)]
 
         elapsed = time.time() - start_time
         rate = 1000 / elapsed
@@ -172,7 +172,7 @@ class TestMemoryUsage:
 
         # Run many generations
         population = optimizer.initialize()
-        for generation in range(100):
+        for _generation in range(100):
             for individual in population.individuals:
                 individual.fitness = fast_evaluator(individual.genome)["accuracy"]
             population = optimizer.evolve(population)
@@ -196,7 +196,7 @@ class TestScaling:
         start_time = time.time()
 
         population = optimizer.initialize()
-        for generation in range(5):
+        for _generation in range(5):
             for individual in population.individuals:
                 individual.fitness = fast_evaluator(individual.genome)["accuracy"]
             population = optimizer.evolve(population)
@@ -238,11 +238,11 @@ class TestScaling:
 
         # Sample from both
         start_simple = time.time()
-        simple_samples = [simple_space.sample() for _ in range(100)]
+        [simple_space.sample() for _ in range(100)]
         time_simple = time.time() - start_simple
 
         start_complex = time.time()
-        complex_samples = [complex_space.sample() for _ in range(100)]
+        [complex_space.sample() for _ in range(100)]
         time_complex = time.time() - start_complex
 
         # Complex space should not be more than 10x slower
@@ -261,13 +261,13 @@ class TestConcurrency:
 
         # Sequential
         start_seq = time.time()
-        results_seq = [fast_evaluator(c) for c in candidates]
+        [fast_evaluator(c) for c in candidates]
         time_seq = time.time() - start_seq
 
         # Parallel
         start_par = time.time()
         with ThreadPoolExecutor(max_workers=4) as executor:
-            results_par = list(executor.map(fast_evaluator, candidates))
+            list(executor.map(fast_evaluator, candidates))
         time_par = time.time() - start_par
 
         # Parallel should be faster (or at least not much slower)
@@ -290,7 +290,7 @@ class TestStressTest:
         assert len(population.individuals) == 500
 
         # Run a few generations
-        for generation in range(5):
+        for _generation in range(5):
             for individual in population.individuals:
                 individual.fitness = fast_evaluator(individual.genome)["accuracy"]
             population = optimizer.evolve(population)

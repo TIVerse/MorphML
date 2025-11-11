@@ -4,16 +4,16 @@ Validate search spaces before running expensive NAS operations.
 
 Example:
     >>> from morphml.utils.validation import validate_search_space
-    >>> 
+    >>>
     >>> issues = validate_search_space(space)
     >>> if issues:
     ...     for issue in issues:
     ...         print(f"Warning: {issue}")
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
+
 from morphml.core.dsl import SearchSpace
-from morphml.core.graph import ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -304,7 +304,7 @@ class SearchSpaceValidator:
             print("✓ Search space validation passed!")
             return
 
-        print(f"\nSearch Space Validation Report")
+        print("\nSearch Space Validation Report")
         print("=" * 70)
 
         errors = [i for i in self.issues if i.severity == "error"]
@@ -388,5 +388,5 @@ def quick_validate(search_space: SearchSpace) -> bool:
         ...     pass
     """
     validator = SearchSpaceValidator(search_space)
-    issues = validator.validate()
+    validator.validate()
     return not validator.has_errors()

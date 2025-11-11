@@ -4,29 +4,29 @@ Provides rich progress bars and status displays for long-running NAS operations.
 
 Example:
     >>> from morphml.utils.progress import OptimizationProgress
-    >>> 
+    >>>
     >>> progress = OptimizationProgress(total_generations=100)
     >>> for gen in range(100):
     ...     progress.update(gen, best_fitness=0.95, diversity=0.7)
 """
 
-from typing import Optional, Dict, Any
 from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
 
 try:
-    from rich.progress import (
-        Progress,
-        SpinnerColumn,
-        TextColumn,
-        BarColumn,
-        TaskProgressColumn,
-        TimeRemainingColumn,
-    )
     from rich.console import Console
-    from rich.table import Table
+    from rich.layout import Layout
     from rich.live import Live
     from rich.panel import Panel
-    from rich.layout import Layout
+    from rich.progress import (
+        BarColumn,
+        Progress,
+        SpinnerColumn,
+        TaskProgressColumn,
+        TextColumn,
+        TimeRemainingColumn,
+    )
+    from rich.table import Table
 
     RICH_AVAILABLE = True
 except ImportError:
@@ -159,7 +159,7 @@ class OptimizationProgress:
             self._show_summary()
         else:
             elapsed = (datetime.now() - self.start_time).total_seconds()
-            print(f"\nOptimization complete!")
+            print("\nOptimization complete!")
             print(f"Total time: {elapsed:.2f}s")
             print(f"Best fitness: {self.best_fitness:.4f}")
 
@@ -335,7 +335,7 @@ class LiveDashboard:
 
         # Update header
         self.layout["header"].update(
-            Panel(f"[bold cyan]MorphML Optimization Dashboard[/bold cyan]", style="cyan")
+            Panel("[bold cyan]MorphML Optimization Dashboard[/bold cyan]", style="cyan")
         )
 
         # Update body with stats table

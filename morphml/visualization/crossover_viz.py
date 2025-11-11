@@ -6,9 +6,9 @@ showing how parent architectures are combined to create offspring.
 Example:
     >>> from morphml.visualization.crossover_viz import visualize_crossover
     >>> from morphml.core.graph.mutations import crossover
-    >>> 
+    >>>
     >>> offspring1, offspring2 = crossover(parent1, parent2)
-    >>> visualize_crossover(parent1, parent2, offspring1, offspring2, 
+    >>> visualize_crossover(parent1, parent2, offspring1, offspring2,
     ...                     output_file="crossover.png")
 """
 
@@ -120,7 +120,7 @@ def visualize_crossover_comparison(
         stats_text,
         ha="center",
         fontsize=10,
-        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
     )
 
     plt.tight_layout()
@@ -163,8 +163,8 @@ def visualize_crossover_animation(
         logger.error("imageio required for animation. Install with: pip install imageio")
         return
 
-    import tempfile
     import os
+    import tempfile
 
     frames = []
     temp_dir = tempfile.mkdtemp()

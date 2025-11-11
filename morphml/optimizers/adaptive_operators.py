@@ -5,22 +5,21 @@ adjust their rates based on population diversity and search progress.
 
 Example:
     >>> from morphml.optimizers.adaptive_operators import AdaptiveCrossoverManager
-    >>> 
+    >>>
     >>> manager = AdaptiveCrossoverManager(
     ...     initial_rate=0.8,
     ...     min_rate=0.5,
     ...     max_rate=0.95
     ... )
-    >>> 
+    >>>
     >>> # During optimization
     >>> crossover_rate = manager.get_rate(population, generation)
 """
 
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 
-from morphml.core.search.individual import Individual
 from morphml.core.search.population import Population
 from morphml.logging_config import get_logger
 

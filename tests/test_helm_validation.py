@@ -7,11 +7,9 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, List
 
 import pytest
 import yaml
-
 
 HELM_CHART_DIR = Path(__file__).parent.parent / "deployment" / "helm" / "morphml"
 K8S_MANIFESTS_DIR = Path(__file__).parent.parent / "deployment" / "kubernetes"
@@ -209,7 +207,7 @@ class TestResourceConfiguration:
 
         autoscaling = values["worker"]["autoscaling"]
 
-        assert autoscaling["enabled"] == True
+        assert autoscaling["enabled"] is True
         assert autoscaling["minReplicas"] >= 1
         assert autoscaling["maxReplicas"] >= autoscaling["minReplicas"]
         assert 0 < autoscaling["targetCPUUtilizationPercentage"] <= 100
@@ -225,7 +223,7 @@ class TestSecurityConfiguration:
             values = yaml.safe_load(f)
 
         assert "rbac" in values
-        assert values["rbac"]["create"] == True
+        assert values["rbac"]["create"] is True
 
     def test_service_account_configured(self):
         """Test service account is configured."""
@@ -234,7 +232,7 @@ class TestSecurityConfiguration:
             values = yaml.safe_load(f)
 
         assert "serviceAccount" in values
-        assert values["serviceAccount"]["create"] == True
+        assert values["serviceAccount"]["create"] is True
         assert "name" in values["serviceAccount"]
 
     def test_secrets_template_exists(self):
@@ -296,7 +294,7 @@ class TestStorageConfiguration:
             values = yaml.safe_load(f)
 
         pg_config = values["postgresql"]
-        assert pg_config["enabled"] == True
+        assert pg_config["enabled"] is True
         assert "auth" in pg_config
         assert "database" in pg_config["auth"]
 
@@ -307,7 +305,7 @@ class TestStorageConfiguration:
             values = yaml.safe_load(f)
 
         redis_config = values["redis"]
-        assert redis_config["enabled"] == True
+        assert redis_config["enabled"] is True
 
     def test_minio_configured(self):
         """Test MinIO is configured."""
@@ -316,7 +314,7 @@ class TestStorageConfiguration:
             values = yaml.safe_load(f)
 
         minio_config = values["minio"]
-        assert minio_config["enabled"] == True
+        assert minio_config["enabled"] is True
         assert "defaultBuckets" in minio_config
 
 

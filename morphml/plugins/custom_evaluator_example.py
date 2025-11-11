@@ -12,8 +12,8 @@ Usage:
     >>> fitness = plugin.evaluate(architecture)
 """
 
-from morphml.plugins import EvaluatorPlugin
 from morphml.core.graph import ModelGraph
+from morphml.plugins import EvaluatorPlugin
 
 
 class Plugin(EvaluatorPlugin):
@@ -43,7 +43,7 @@ class Plugin(EvaluatorPlugin):
         self.latency_weight /= total
         self.accuracy_weight /= total
 
-        print(f"Initialized Multi-Objective Evaluator plugin:")
+        print("Initialized Multi-Objective Evaluator plugin:")
         print(f"  Accuracy weight: {self.accuracy_weight:.2f}")
         print(f"  Latency weight: {self.latency_weight:.2f}")
 

@@ -7,12 +7,12 @@ Example:
     >>> app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
 """
 
-from typing import Dict, Tuple
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
+from typing import Dict, Tuple
 
 try:
-    from fastapi import Request, HTTPException, status
+    from fastapi import HTTPException, Request, status
     from starlette.middleware.base import BaseHTTPMiddleware
 
     FASTAPI_AVAILABLE = True

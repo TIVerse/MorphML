@@ -8,12 +8,13 @@ Example:
     morphml experiment show exp_123
 """
 
+from typing import Optional
+
 import click
 from rich.console import Console
-from rich.table import Table
-from rich.prompt import Prompt, Confirm
 from rich.progress import Progress
-from typing import Optional
+from rich.prompt import Confirm, Prompt
+from rich.table import Table
 
 from morphml.logging_config import get_logger
 
@@ -97,12 +98,6 @@ def create(name: Optional[str], optimizer: str, budget: int, interactive: bool):
         layers.append(layer_config)
 
     # Create experiment config
-    config = {
-        "name": name,
-        "optimizer": optimizer,
-        "budget": budget,
-        "search_space": {"layers": layers},
-    }
 
     # Display summary
     console.print("\n[bold green]Experiment Configuration:[/bold green]")
@@ -241,7 +236,7 @@ def show(experiment_id: str):
         f"[bold]Progress:[/bold] {exp['generation']}/{exp['total_generations']} generations"
     )
 
-    console.print(f"\n[bold green]Best Architecture:[/bold green]")
+    console.print("\n[bold green]Best Architecture:[/bold green]")
     console.print(f"  Accuracy: {exp['best_accuracy']:.4f}")
     console.print(f"  Parameters: {exp['best_architecture']['parameters']:,}")
     console.print(f"  Depth: {exp['best_architecture']['depth']}")
@@ -265,7 +260,7 @@ def start(experiment_id: str):
         # Simulate startup
         import time
 
-        for i in range(100):
+        for _i in range(100):
             time.sleep(0.01)
             progress.update(task, advance=1)
 

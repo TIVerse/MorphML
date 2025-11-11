@@ -3,9 +3,9 @@
 This module provides the main FastAPI application with all endpoints.
 """
 
+import uuid
 from datetime import datetime
 from typing import List, Optional
-import uuid
 
 try:
     from fastapi import FastAPI, HTTPException, status
@@ -17,14 +17,14 @@ except ImportError:
     FastAPI = None
 
 from morphml.api.models import (
+    ArchitectureResponse,
     ExperimentCreate,
     ExperimentResponse,
-    ArchitectureResponse,
-    OptimizerInfo,
     HealthResponse,
+    OptimizerInfo,
 )
-from morphml.version import __version__
 from morphml.logging_config import get_logger
+from morphml.version import __version__
 
 logger = get_logger(__name__)
 

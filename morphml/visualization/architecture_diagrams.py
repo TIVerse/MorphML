@@ -8,8 +8,7 @@ Example:
     >>> generator.generate_svg(graph, "architecture.svg")
 """
 
-from typing import Dict, Any, Optional
-from pathlib import Path
+from typing import Dict, Optional
 
 try:
     import graphviz
@@ -19,7 +18,7 @@ except ImportError:
     GRAPHVIZ_AVAILABLE = False
     graphviz = None
 
-from morphml.core.graph import ModelGraph, GraphNode
+from morphml.core.graph import GraphNode, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -164,11 +163,11 @@ class ArchitectureDiagramGenerator:
             dot.attr(label=title, labelloc="t", fontsize="16")
 
         # Add nodes
-        for node_id, node in graph.nodes.items():
+        for _node_id, node in graph.nodes.items():
             self._add_node(dot, node)
 
         # Add edges
-        for edge_id, edge in graph.edges.items():
+        for _edge_id, edge in graph.edges.items():
             self._add_edge(dot, edge)
 
         return dot
@@ -182,7 +181,6 @@ class ArchitectureDiagramGenerator:
             node: GraphNode to add
         """
         operation = node.operation
-        params = node.params
 
         # Get color
         color = self.OPERATION_COLORS.get(operation, "#CCCCCC")
@@ -294,11 +292,11 @@ class ArchitectureDiagramGenerator:
                 sub.attr(label=name, style="rounded", color="gray")
 
                 # Add nodes
-                for node_id, node in graph.nodes.items():
+                for _node_id, node in graph.nodes.items():
                     self._add_node(sub, node)
 
                 # Add edges
-                for edge_id, edge in graph.edges.items():
+                for _edge_id, edge in graph.edges.items():
                     self._add_edge(sub, edge)
 
         # Render
@@ -343,11 +341,11 @@ class ArchitectureDiagramGenerator:
         )
 
         # Add architecture nodes
-        for node_id, node in graph.nodes.items():
+        for _node_id, node in graph.nodes.items():
             self._add_node(dot, node)
 
         # Add edges
-        for edge_id, edge in graph.edges.items():
+        for _edge_id, edge in graph.edges.items():
             self._add_edge(dot, edge)
 
         # Render

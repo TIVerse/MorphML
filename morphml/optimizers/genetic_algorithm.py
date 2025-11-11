@@ -228,8 +228,9 @@ class GeneticAlgorithm:
         Returns:
             Offspring individual
         """
-        from morphml.core.graph.mutations import crossover as graph_crossover
         import random
+
+        from morphml.core.graph.mutations import crossover as graph_crossover
 
         # Perform graph crossover
         offspring_graph1, offspring_graph2 = graph_crossover(parent1.graph, parent2.graph)

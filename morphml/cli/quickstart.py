@@ -6,9 +6,10 @@ Run:
     morphml quickstart
 """
 
-import click
 from pathlib import Path
 from typing import Optional
+
+import click
 
 from morphml.logging_config import get_logger
 
@@ -31,19 +32,19 @@ from morphml.utils import ArchitectureExporter
 space = SearchSpace("{name}")
 space.add_layers(
     Layer.input(shape=(3, 32, 32)),
-    
+
     # First conv block
     Layer.conv2d(filters=[32, 64], kernel_size=[3, 5]),
     Layer.batchnorm(),
     Layer.relu(),
     Layer.maxpool(pool_size=2),
-    
+
     # Second conv block
     Layer.conv2d(filters=[64, 128], kernel_size=3),
     Layer.batchnorm(),
     Layer.relu(),
     Layer.maxpool(pool_size=2),
-    
+
     # Classification head
     Layer.flatten(),
     Layer.dense(units=[128, 256, 512]),
@@ -293,10 +294,10 @@ def quickstart(
         click.echo(f"Population: {population_size}")
         click.echo(f"Generations: {num_generations}")
 
-    click.echo(f"\nNext steps:")
+    click.echo("\nNext steps:")
     click.echo(f"  1. Review and customize {output}")
     click.echo(f"  2. Run: python {output}")
-    click.echo(f"  3. Check exported model file")
+    click.echo("  3. Check exported model file")
 
     # Show template description
     descriptions = {

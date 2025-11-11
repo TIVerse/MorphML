@@ -14,10 +14,10 @@ Example:
     >>> results = trainer.train(train_loader, val_loader)
 """
 
-from morphml.integrations.pytorch_adapter import PyTorchAdapter, PyTorchTrainer
-from morphml.integrations.tensorflow_adapter import TensorFlowAdapter
 from morphml.integrations.jax_adapter import JAXAdapter
+from morphml.integrations.pytorch_adapter import PyTorchAdapter, PyTorchTrainer
 from morphml.integrations.sklearn_adapter import SklearnAdapter
+from morphml.integrations.tensorflow_adapter import TensorFlowAdapter
 
 __all__ = [
     "PyTorchAdapter",

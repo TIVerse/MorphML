@@ -9,13 +9,14 @@ Example:
     >>> fig.show()
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
+
 import numpy as np
 
 try:
+    import plotly.express as px
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
-    import plotly.express as px
 
     PLOTLY_AVAILABLE = True
 except ImportError:
@@ -101,8 +102,8 @@ class InteractiveDashboard:
                 y=best_fitness,
                 mode="lines+markers",
                 name="Best Fitness",
-                line=dict(color="#FF6B6B", width=2),
-                marker=dict(size=6),
+                line={"color": "#FF6B6B", "width": 2},
+                marker={"size": 6},
             ),
             row=1,
             col=1,
@@ -114,7 +115,7 @@ class InteractiveDashboard:
                 y=mean_fitness,
                 mode="lines",
                 name="Mean Fitness",
-                line=dict(color="#4ECDC4", width=2, dash="dash"),
+                line={"color": "#4ECDC4", "width": 2, "dash": "dash"},
             ),
             row=1,
             col=1,
@@ -131,7 +132,7 @@ class InteractiveDashboard:
                     x=all_fitness,
                     nbinsx=30,
                     name="Fitness Distribution",
-                    marker=dict(color="#45B7D1"),
+                    marker={"color": "#45B7D1"},
                 ),
                 row=1,
                 col=2,
@@ -146,8 +147,8 @@ class InteractiveDashboard:
                     y=diversity,
                     mode="lines+markers",
                     name="Diversity",
-                    line=dict(color="#96CEB4", width=2),
-                    marker=dict(size=6),
+                    line={"color": "#96CEB4", "width": 2},
+                    marker={"size": 6},
                 ),
                 row=2,
                 col=1,
@@ -165,13 +166,13 @@ class InteractiveDashboard:
                     y=fitness,
                     mode="markers",
                     name="Architectures",
-                    marker=dict(
-                        size=8,
-                        color=fitness,
-                        colorscale="Viridis",
-                        showscale=True,
-                        colorbar=dict(title="Fitness"),
-                    ),
+                    marker={
+                        "size": 8,
+                        "color": fitness,
+                        "colorscale": "Viridis",
+                        "showscale": True,
+                        "colorbar": {"title": "Fitness"},
+                    },
                     text=[f"Params: {p:,}" for p in params],
                     hovertemplate="<b>Fitness:</b> %{y:.4f}<br><b>%{text}</b>",
                 ),
@@ -231,13 +232,13 @@ class InteractiveDashboard:
                     y=y,
                     z=z,
                     mode="markers",
-                    marker=dict(
-                        size=6,
-                        color=x,  # Color by first objective
-                        colorscale="Viridis",
-                        showscale=True,
-                        colorbar=dict(title=objectives[0]),
-                    ),
+                    marker={
+                        "size": 6,
+                        "color": x,  # Color by first objective
+                        "colorscale": "Viridis",
+                        "showscale": True,
+                        "colorbar": {"title": objectives[0]},
+                    },
                     text=[f"ID: {a.get('id', 'N/A')}" for a in architectures],
                     hovertemplate=(
                         f"<b>{objectives[0]}:</b> %{{x:.4f}}<br>"
@@ -251,9 +252,11 @@ class InteractiveDashboard:
 
         fig.update_layout(
             title="3D Pareto Front",
-            scene=dict(
-                xaxis_title=objectives[0], yaxis_title=objectives[1], zaxis_title=objectives[2]
-            ),
+            scene={
+                "xaxis_title": objectives[0],
+                "yaxis_title": objectives[1],
+                "zaxis_title": objectives[2],
+            },
             height=700,
         )
 
@@ -283,7 +286,7 @@ class InteractiveDashboard:
                     labels=list(operation_counts.keys()),
                     values=list(operation_counts.values()),
                     hole=0.3,
-                    marker=dict(colors=px.colors.qualitative.Set3),
+                    marker={"colors": px.colors.qualitative.Set3},
                 )
             ]
         )
@@ -324,8 +327,8 @@ class InteractiveDashboard:
                     y=best_fitness,
                     mode="lines+markers",
                     name=name,
-                    line=dict(color=colors[i % len(colors)], width=2),
-                    marker=dict(size=6),
+                    line={"color": colors[i % len(colors)], "width": 2},
+                    marker={"size": 6},
                 )
             )
 
@@ -383,7 +386,7 @@ class InteractiveDashboard:
                 x=xedges[:-1],
                 y=yedges[:-1],
                 colorscale="Viridis",
-                colorbar=dict(title=z_metric),
+                colorbar={"title": z_metric},
             )
         )
 

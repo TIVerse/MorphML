@@ -9,7 +9,7 @@ Example:
 """
 
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 try:
     from jose import JWTError, jwt

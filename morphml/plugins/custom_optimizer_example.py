@@ -12,8 +12,8 @@ Usage:
     >>> optimizer = plugin.get_optimizer()
 """
 
-from morphml.plugins import OptimizerPlugin
 from morphml.optimizers.simulated_annealing import SimulatedAnnealing
+from morphml.plugins import OptimizerPlugin
 
 
 class Plugin(OptimizerPlugin):
@@ -40,7 +40,7 @@ class Plugin(OptimizerPlugin):
         self.cooling_rate = config.get("cooling_rate", 0.95)
         self.max_iterations = config.get("max_iterations", 1000)
 
-        print(f"Initialized SimulatedAnnealing plugin:")
+        print("Initialized SimulatedAnnealing plugin:")
         print(f"  Temperature: {self.temperature}")
         print(f"  Cooling rate: {self.cooling_rate}")
         print(f"  Max iterations: {self.max_iterations}")

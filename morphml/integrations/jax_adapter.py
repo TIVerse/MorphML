@@ -10,7 +10,7 @@ Example:
     >>> output = model.apply(params, x)
 """
 
-from typing import Dict, Any, Optional, Tuple
+from typing import Optional, Tuple
 
 try:
     import jax
@@ -24,7 +24,7 @@ except ImportError:
     jnp = None
     nn = None
 
-from morphml.core.graph import ModelGraph, GraphNode
+from morphml.core.graph import GraphNode, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)

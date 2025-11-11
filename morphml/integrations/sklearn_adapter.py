@@ -10,23 +10,23 @@ Example:
     >>> predictions = pipeline.predict(X_test)
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 try:
+    from sklearn.decomposition import PCA
+    from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.neighbors import KNeighborsClassifier
     from sklearn.pipeline import Pipeline
     from sklearn.preprocessing import StandardScaler
-    from sklearn.decomposition import PCA
-    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-    from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    from sklearn.neighbors import KNeighborsClassifier
 
     SKLEARN_AVAILABLE = True
 except ImportError:
     SKLEARN_AVAILABLE = False
     Pipeline = None
 
-from morphml.core.graph import ModelGraph, GraphNode
+from morphml.core.graph import GraphNode, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -184,7 +184,6 @@ class SklearnAdapter:
 
         for node in graph.topological_sort():
             op = node.operation
-            params = node.params
 
             if op == "random_forest":
                 param_grid[f"rf_{node.id}__n_estimators"] = [50, 100, 200]

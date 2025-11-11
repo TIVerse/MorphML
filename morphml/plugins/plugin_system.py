@@ -4,24 +4,24 @@ Provides base classes and plugin manager for extending MorphML functionality.
 
 Example:
     >>> from morphml.plugins import PluginManager, OptimizerPlugin
-    >>> 
+    >>>
     >>> class MyPlugin(OptimizerPlugin):
     ...     def initialize(self, config):
     ...         self.config = config
-    ...     
+    ...
     ...     def get_optimizer(self):
     ...         return MyCustomOptimizer(self.config)
-    >>> 
+    >>>
     >>> manager = PluginManager()
     >>> manager.register_plugin('my_optimizer', MyPlugin)
     >>> plugin = manager.load_plugin('my_optimizer', config={})
 """
 
-from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional, Type
 import importlib
 import importlib.util
+from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Type
 
 from morphml.logging_config import get_logger
 
@@ -311,7 +311,7 @@ class PluginManager:
 
             # Look for Plugin class
             if hasattr(module, "Plugin"):
-                return getattr(module, "Plugin")
+                return module.Plugin
 
             # Look for class with matching name
             class_name = "".join(word.capitalize() for word in name.split("_"))
@@ -365,7 +365,7 @@ class PluginManager:
 
         # Find Plugin class
         if hasattr(module, "Plugin"):
-            plugin_class = getattr(module, "Plugin")
+            plugin_class = module.Plugin
         else:
             raise AttributeError(f"No Plugin class found in {filepath}")
 

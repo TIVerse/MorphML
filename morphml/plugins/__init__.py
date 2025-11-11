@@ -15,13 +15,13 @@ Example:
 """
 
 from morphml.plugins.plugin_system import (
-    Plugin,
-    OptimizerPlugin,
     EvaluatorPlugin,
     MutationPlugin,
     ObjectivePlugin,
-    VisualizationPlugin,
+    OptimizerPlugin,
+    Plugin,
     PluginManager,
+    VisualizationPlugin,
 )
 
 __all__ = [

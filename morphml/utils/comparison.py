@@ -4,13 +4,14 @@ Compare multiple architectures across various metrics.
 
 Example:
     >>> from morphml.utils.comparison import compare_architectures
-    >>> 
+    >>>
     >>> comparison = compare_architectures([arch1, arch2, arch3])
     >>> comparison.print_table()
     >>> comparison.plot()
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 
 from morphml.core.graph import ModelGraph

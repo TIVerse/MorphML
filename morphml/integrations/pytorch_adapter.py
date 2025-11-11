@@ -10,7 +10,8 @@ Example:
     >>> results = trainer.train(train_loader, val_loader, num_epochs=50)
 """
 
-from typing import Dict, Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
+
 import numpy as np
 
 try:
@@ -25,7 +26,7 @@ except ImportError:
     torch = None
     nn = None
 
-from morphml.core.graph import ModelGraph, GraphNode
+from morphml.core.graph import GraphNode, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -195,7 +196,7 @@ class GraphToModule(nn.Module):
         """
         op = node.operation
         params = node.params
-        shape = self.shapes.get(node.id)
+        self.shapes.get(node.id)
 
         if op == "input":
             return None  # No layer needed

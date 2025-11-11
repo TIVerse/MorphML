@@ -10,8 +10,7 @@ Example:
     >>> model.fit(x_train, y_train, validation_data=(x_val, y_val))
 """
 
-from typing import Dict, Any, Optional, Tuple
-import numpy as np
+from typing import Any, Dict, Optional, Tuple
 
 try:
     import tensorflow as tf
@@ -25,7 +24,7 @@ except ImportError:
     keras = None
     layers = None
 
-from morphml.core.graph import ModelGraph, GraphNode
+from morphml.core.graph import GraphNode, ModelGraph
 from morphml.logging_config import get_logger
 
 logger = get_logger(__name__)

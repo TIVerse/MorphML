@@ -8,13 +8,11 @@ Organization: TONMOY INFRASTRUCTURE & VISION
 
 import time
 from typing import Dict
-from unittest.mock import Mock
 
 import pytest
 
 from morphml.core.dsl import Layer, SearchSpace
 from morphml.core.graph import ModelGraph
-
 
 # Skip if gRPC not available
 try:
