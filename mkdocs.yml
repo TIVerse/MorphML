@@ -1,0 +1,214 @@
+site_name: MorphML Documentation
+site_description: Production-grade Neural Architecture Search Framework
+site_author: Vedanth & Eshan Roy (TONMOY INFRASTRUCTURE & VISION)
+site_url: https://morphml.readthedocs.io
+repo_url: https://github.com/TIVerse/MorphML
+repo_name: TIVerse/MorphML
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  
+  icon:
+    repo: fontawesome/brands/github
+  
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+
+nav:
+  - Home: index.md
+  
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Core Concepts: getting-started/concepts.md
+      - First Experiment: getting-started/first-experiment.md
+  
+  - User Guide:
+      - Search Spaces: user-guide/search-spaces.md
+      - Optimizers: user-guide/optimizers.md
+      - Constraints: user-guide/constraints.md
+      - Evaluation: user-guide/evaluation.md
+      - Visualization: user-guide/visualization.md
+      - Distributed: user-guide/distributed.md
+      - Multi-Objective: user-guide/multi-objective.md
+      - Checkpointing: user-guide/checkpointing.md
+  
+  - Tutorials:
+      - CIFAR-10 NAS: tutorials/cifar10-nas.md
+      - Multi-Objective Optimization: tutorials/multi-objective.md
+      - Distributed Search: tutorials/distributed-search.md
+      - Custom Optimizer: tutorials/custom-optimizer.md
+      - Transfer Learning: tutorials/transfer-learning.md
+      - Benchmarking: tutorials/benchmarking.md
+  
+  - API Reference:
+      - Core:
+          - Search Spaces: api-reference/core/search-spaces.md
+          - Model Graph: api-reference/core/model-graph.md
+          - DSL: api-reference/core/dsl.md
+      - Optimizers:
+          - Base: api-reference/optimizers/base.md
+          - Genetic Algorithm: api-reference/optimizers/genetic.md
+          - Bayesian Optimization: api-reference/optimizers/bayesian.md
+          - Random Search: api-reference/optimizers/random.md
+      - Evaluation:
+          - Evaluators: api-reference/evaluation/evaluators.md
+          - Metrics: api-reference/evaluation/metrics.md
+      - Constraints: api-reference/constraints/constraints.md
+      - Visualization: api-reference/visualization/visualization.md
+      - Distributed: api-reference/distributed/distributed.md
+      - Integrations:
+          - PyTorch: api-reference/integrations/pytorch.md
+          - TensorFlow: api-reference/integrations/tensorflow.md
+          - JAX: api-reference/integrations/jax.md
+      - Plugins: api-reference/plugins/plugins.md
+  
+  - Deployment:
+      - Docker: deployment/docker.md
+      - Kubernetes: deployment/kubernetes.md
+      - AWS: deployment/aws.md
+      - GCP: deployment/gcp.md
+      - Azure: deployment/azure.md
+      - On-Premise: deployment/on-premise.md
+  
+  - Dashboard:
+      - Overview: dashboard/overview.md
+      - Setup: dashboard/setup.md
+      - Usage: dashboard/usage.md
+      - API: dashboard/api.md
+  
+  - Contributing:
+      - Development Setup: contributing/development.md
+      - Code Style: contributing/code-style.md
+      - Testing: contributing/testing.md
+      - Pull Requests: contributing/pull-requests.md
+      - Documentation: contributing/documentation.md
+  
+  - About:
+      - Changelog: about/changelog.md
+      - License: about/license.md
+      - Authors: about/authors.md
+      - Citation: about/citation.md
+
+plugins:
+  - search:
+      lang: en
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_object_full_path: false
+            show_category_heading: true
+            show_if_no_docstring: false
+            show_signature: true
+            show_signature_annotations: true
+            separate_signature: true
+            line_length: 80
+            merge_init_into_class: true
+            docstring_style: google
+            docstring_section_style: table
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/TIVerse/MorphML
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/morphml/
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/tiverse/morphml
+  
+  version:
+    provider: mike
+  
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+copyright: Copyright &copy; 2024 TONMOY INFRASTRUCTURE & VISION
