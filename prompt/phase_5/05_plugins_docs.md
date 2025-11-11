@@ -143,7 +143,7 @@ docs/
 ```yaml
 site_name: MorphML Documentation
 site_description: Automated Neural Architecture Search
-site_author: Eshan Roy
+site_author: Vedanth & Eshan Roy (TONMOY INFRASTRUCTURE & VISION)
 repo_url: https://github.com/TIVerse/MorphML
 repo_name: TIVerse/MorphML
 

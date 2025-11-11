@@ -1,6 +1,6 @@
 # Phase 2: Advanced Search - Overview
 
-**Author:** Eshan Roy <eshanized@proton.me>  
+**Authors:** Vedanth ([@vedanthq](https://github.com/vedanthq)) & Eshan Roy ([@eshanized](https://github.com/eshanized))  
 **Organization:** TONMOY INFRASTRUCTURE & VISION  
 **Repository:** https://github.com/TIVerse/MorphML  
 **Phase Duration:** Months 7-12 (8-12 weeks)  

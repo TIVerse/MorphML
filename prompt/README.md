@@ -1,6 +1,6 @@
 # MorphML Development Prompts
 
-**Author:** Eshan Roy <eshanized@proton.me>  
+**Authors:** Vedanth ([@vedanthq](https://github.com/vedanthq)) & Eshan Roy ([@eshanized](https://github.com/eshanized))  
 **Organization:** TONMOY INFRASTRUCTURE & VISION  
 **Repository:** https://github.com/TIVerse/MorphML  
 **Last Updated:** November 1, 2025

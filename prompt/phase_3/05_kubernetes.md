@@ -245,6 +245,8 @@ keywords:
   - neural-architecture-search
   - distributed-computing
 maintainers:
+  - name: Vedanth
+    email: vedanth@vedanthq.com
   - name: Eshan Roy
     email: eshanized@proton.me
 ```

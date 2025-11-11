@@ -1,6 +1,6 @@
 # MorphML Development Prompts - Complete Index
 
-**Author:** Eshan Roy <eshanized@proton.me>  
+**Authors:** Vedanth ([@vedanthq](https://github.com/vedanthq)) & Eshan Roy ([@eshanized](https://github.com/eshanized))  
 **Organization:** TONMOY INFRASTRUCTURE & VISION  
 **Repository:** https://github.com/TIVerse/MorphML  
 **Last Updated:** November 1, 2025
@@ -305,10 +305,10 @@ poetry run pytest
 - **Info:** `docs/info.md`
 
 ### Contact
-- **Author:** Eshan Roy
-- **Email:** eshanized@proton.me
-- **GitHub:** https://github.com/eshanized
+- **Authors:** Vedanth & Eshan Roy
 - **Organization:** TONMOY INFRASTRUCTURE & VISION
+- **GitHub:** [@vedanthq](https://github.com/vedanthq) & [@eshanized](https://github.com/eshanized)
+- **Email:** vedanth@vedanthq.com, eshanized@proton.me
 - **Repository:** https://github.com/TIVerse/MorphML
 
 ---
