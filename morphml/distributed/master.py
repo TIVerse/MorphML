@@ -23,11 +23,14 @@ try:
     GRPC_AVAILABLE = True
 except ImportError:
     GRPC_AVAILABLE = False
+
     # Create stub modules when grpc is not available
     class _StubModule:
         def __getattr__(self, name):
-            raise ImportError("grpc is not installed. Install with: pip install grpcio grpcio-tools")
-    
+            raise ImportError(
+                "grpc is not installed. Install with: pip install grpcio grpcio-tools"
+            )
+
     worker_pb2 = _StubModule()
     worker_pb2_grpc = _StubModule()
 
@@ -636,6 +639,7 @@ class MasterNode:
 
 
 if GRPC_AVAILABLE:
+
     class MasterServicer(worker_pb2_grpc.MasterServiceServicer):
         """gRPC servicer for master node."""
 
