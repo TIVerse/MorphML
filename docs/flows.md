@@ -1,5 +1,5 @@
 # 🧬 MorphML Complete Algorithm Diagrams
-**Author:** Eshan Roy <eshanized@proton.me>  
+**Authors:** Vedanth ([@vedanthq](https://github.com/vedanthq)) & Eshan Roy ([@eshanized](https://github.com/eshanized))  
 **Organization:** TONMOY INFRASTRUCTURE & VISION  
 **Organization Description:** TIVerse — The innovation universe by Tonmoy Infrastructure & Vision, building open-source tools in AI, Cloud, DevOps, and Infrastructure.  
 **Repository:** https://github.com/TIVerse/MorphML  
@@ -1774,9 +1774,9 @@ All diagrams are in Mermaid.js format and can be rendered in:
 
 ---
 
-**Document Maintained By**: Eshan Roy <eshanized@proton.me>  
-**Last Updated**: October 31, 2025.
-**Next Review**: January 31, 2025.
+**Document Maintained By**: Vedanth & Eshan Roy (TONMOY INFRASTRUCTURE & VISION)  
+**Last Updated**: November 11, 2024  
+**Next Review**: January 31, 2025
 
 ---
 
