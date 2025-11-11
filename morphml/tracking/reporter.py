@@ -102,7 +102,10 @@ class Reporter:
             "th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }",
             "th { background-color: #4CAF50; color: white; }",
             "pre { background: #f4f4f4; padding: 15px; border-radius: 5px; }",
-            ".metric-card { background: #fff; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }",
+            (
+                ".metric-card { background: #fff; border: 1px solid #ddd; "
+                "padding: 15px; margin: 10px 0; border-radius: 5px; }"
+            ),
             "</style>",
             "</head>",
             "<body>",

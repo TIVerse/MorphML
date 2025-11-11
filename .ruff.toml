@@ -1,0 +1,18 @@
+# Ruff configuration
+# Ignore auto-generated files
+exclude = ["morphml/distributed/proto/*_pb2.py", "morphml/distributed/proto/*_pb2_grpc.py"]
+
+# Ignore specific rules
+ignore = [
+    "B904",  # Exception handling - raise from
+    "B905",  # zip() strict parameter (Python 3.10+)
+    "E402",  # Module level imports (test files)
+    "B007",  # Loop control variable not used
+    "E722",  # Bare except
+    "F811",  # Redefinition
+    "B006",  # Mutable defaults
+    "B027",  # Empty abstract method
+]
+
+line-length = 120
+target-version = "py310"
