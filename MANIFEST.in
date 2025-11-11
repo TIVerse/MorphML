@@ -1,0 +1,39 @@
+# MANIFEST.in - Include additional files in the package distribution
+
+# Documentation
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+include CHANGELOG.md
+
+# Configuration files
+include pyproject.toml
+include setup.py
+
+# Examples
+recursive-include examples *.py
+recursive-include examples *.md
+
+# Documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+
+# Exclude unnecessary files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude .git*
+global-exclude *.so
+global-exclude *.dylib
+
+# Exclude tests and development files
+prune tests
+prune .github
+prune dashboard/frontend/node_modules
+prune dashboard/frontend/build
+
+# Include package data
+recursive-include morphml *.json
+recursive-include morphml *.yaml
+recursive-include morphml *.yml
